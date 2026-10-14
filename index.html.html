@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma Experimental: EVA & TEDA - USP</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- SheetJS para exportação de planilhas Excel (.xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --neu-bg: #e9eef5;
+      --neu-light: #ffffff;
+      --neu-dark: #c5d0e0;
+      --neu-accent: #2563eb;
+      --neu-accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      --neu-text-main: #1e293b;
+      --neu-text-muted: #64748b;
+    }
+
+    body {
+      background-color: var(--neu-bg);
+      color: var(--neu-text-main);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Superfícies Neumórficas Salientes (Raised) */
+    .neu-raised {
+      background: var(--neu-bg);
+      box-shadow: 9px 9px 18px var(--neu-dark), -9px -9px 18px var(--neu-light);
+    }
+    .neu-raised-sm {
+      background: var(--neu-bg);
+      box-shadow: 5px 5px 12px var(--neu-dark), -5px -5px 12px var(--neu-light);
+    }
+    .neu-raised-lg {
+      background: var(--neu-bg);
+      box-shadow: 14px 14px 28px var(--neu-dark), -14px -14px 28px var(--neu-light);
+    }
+
+    /* Superfícies Neumórficas Rebaixadas (Inset) */
+    .neu-inset {
+      background: var(--neu-bg);
+      box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
+    }
+    .neu-inset-deep {
+      background: #e2e8f1;
+      box-shadow: inset 6px 6px 12px #bcc9db, inset -6px -6px 12px var(--neu-light);
+    }
+
+    /* Botões Neumórficos Táteis */
+    .neu-btn {
+      background: var(--neu-bg);
+      box-shadow: 6px 6px 14px var(--neu-dark), -6px -6px 14px var(--neu-light);
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .neu-btn:hover {
+      box-shadow: 4px 4px 10px var(--neu-dark), -4px -4px 10px var(--neu-light);
+      transform: translateY(-1px);
+    }
+    .neu-btn:active {
+      box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
+      transform: translateY(1px);
+    }
+
+    /* Botões Principais com Gradiente Azul */
+    .neu-btn-primary {
+      background: var(--neu-accent-gradient);
+      box-shadow: 5px 5px 15px rgba(37, 99, 235, 0.35), -5px -5px 15px var(--neu-light);
+      color: #ffffff;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .neu-btn-primary:hover:not(:disabled) {
+      box-shadow: 7px 7px 20px rgba(37, 99, 235, 0.45), -6px -6px 16px var(--neu-light);
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+    .neu-btn-primary:active:not(:disabled) {
+      box-shadow: inset 3px 3px 6px rgba(15, 23, 42, 0.3), 2px 2px 8px var(--neu-light);
+      transform: translateY(1px);
+    }
+    .neu-btn-primary:disabled {
+      background: #d4dce8;
+      color: #94a3b8;
+      box-shadow: 3px 3px 8px var(--neu-dark), -3px -3px 8px var(--neu-light);
+      cursor: not-allowed;
+    }
+
+    /* Sliders Táteis da EVA */
+    input[type=range].neu-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 16px;
+      background: #e2e8f1;
+      border-radius: 9999px;
+      outline: none;
+      box-shadow: inset 3px 3px 6px #bcc9db, inset -3px -3px 6px var(--neu-light);
+      cursor: pointer;
+    }
+    /* Knobs táteis com estética Frutiger Aero (Glossy Glass Orb) */
+    input[type=range].neu-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.45) 30%, transparent 60%),
+                  linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.18) 51%, rgba(255, 255, 255, 0.35) 100%),
+                  var(--thumb-bg, #94a3b8);
+      border: 2.5px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25),
+                  0 0 16px var(--thumb-glow, rgba(148, 163, 184, 0.4)),
+                  inset 0 -2px 5px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    input[type=range].neu-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      filter: brightness(1.1);
+    }
+    input[type=range].neu-slider::-moz-range-thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.45) 30%, transparent 60%),
+                  linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.18) 51%, rgba(255, 255, 255, 0.35) 100%),
+                  var(--thumb-bg, #94a3b8);
+      border: 2.5px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25),
+                  0 0 16px var(--thumb-glow, rgba(148, 163, 184, 0.4)),
+                  inset 0 -2px 5px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+
+    /* Botão Frutiger Aero */
+    .frutiger-btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #60a5fa 0%, #2563eb 48%, #1d4ed8 52%, #1e40af 100%);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.42),
+                  inset 0 1px 1.5px rgba(255, 255, 255, 0.95),
+                  inset 0 -2px 5px rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .frutiger-btn::before {
+      content: '';
+      position: absolute;
+      top: 1px;
+      left: 6%;
+      right: 6%;
+      height: 44%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.15) 100%);
+      border-radius: 9999px;
+      pointer-events: none;
+    }
+    .frutiger-btn:hover:not(:disabled) {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.55), inset 0 1px 2px rgba(255, 255, 255, 1);
+    }
+    .frutiger-btn:active:not(:disabled) {
+      transform: translateY(1px);
+      filter: brightness(0.96);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .frutiger-btn:disabled {
+      background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
+      opacity: 0.55;
+      cursor: not-allowed;
+      box-shadow: none;
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Transição suave restrita ao elemento alvo */
+    .smooth-white-overlay {
+      position: absolute;
+      inset: 0;
+      background-color: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity;
+      z-index: 40;
+    }
+    .smooth-white-overlay.active {
+      opacity: 1;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f1;
+      box-shadow: inset 2px 2px 4px #bcc9db, inset -2px -2px 4px #ffffff;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cdd7e5;
+      border-radius: 9999px;
+      box-shadow: 2px 2px 5px #bcc9db, -2px -2px 5px #ffffff;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b8c6d8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+
+  <!-- CABEÇALHO LIMPO (SEM BOTÃO VISÍVEL PARA O PARTICIPANTE) -->
+  <header class="w-full px-6 py-4 flex items-center justify-between z-30">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl neu-raised-sm flex items-center justify-center text-blue-600 shadow-sm">
+        <i class="ph ph-brain text-xl font-bold"></i>
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-700">
+          Laboratório de Neurociência e Comportamento
+        </h1>
+        <span class="text-[10px] text-slate-500 font-medium">Universidade de São Paulo &bull; USP</span>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <span id="badgeCurrentPhase" class="text-xs px-3.5 py-1.5 rounded-xl neu-inset font-semibold text-slate-600">
+        Recepção
+      </span>
+      <!-- O botão do pesquisador permanece oculto para voluntários e acessível via Ctrl+Shift+P ou ?admin=true -->
+      <button id="btnOpenResearcherModal" type="button" class="hidden text-xs px-3 py-1.5 rounded-xl neu-btn text-slate-500 font-semibold cursor-pointer">
+        <i class="ph ph-gear text-sm"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 md:p-8 flex flex-col justify-center">
+
+    <!-- TELA DE EXCLUSÃO: MENORES DE 18 ANOS -->
+    <section id="viewIneligible" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-12 text-center space-y-6">
+      <div class="w-24 h-24 mx-auto rounded-3xl neu-raised flex items-center justify-center text-rose-500 text-5xl">
+        <i class="ph ph-hand-stop"></i>
+      </div>
+      <div class="space-y-3 max-w-xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
+          Obrigado pela participação, mas você não se enquadra no nosso experimento.
+        </h2>
+        <p class="text-slate-600 text-base leading-relaxed">
+          De acordo com as diretrizes do Comitê de Ética em Pesquisa e os critérios metodológicos deste estudo, a participação é restrita exclusivamente a voluntários com idade igual ou superior a 18 anos.
+        </p>
+      </div>
+      <div class="pt-4">
+        <button type="button" onclick="location.reload()" class="px-8 py-3.5 neu-btn text-slate-700 font-bold rounded-2xl text-sm cursor-pointer">
+          Retornar à Página Inicial
+        </button>
+      </div>
+    </section>
+
+    <!-- TELA INICIAL: TCLE & IDENTIFICAÇÃO BÁSICA -->
+    <section id="viewOnboarding" class="space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10">
+      <div class="pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-300/60">
+        <div>
+          <span class="text-xs font-bold px-3 py-1 rounded-full neu-inset text-blue-700 uppercase tracking-wider">
+            Universidade de São Paulo &bull; USP
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-800 mt-2 tracking-tight">
+            Termo de Consentimento Livre e Esclarecido (TCLE)
+          </h2>
+        </div>
+        <button type="button" onclick="downloadTCLE()" class="self-start sm:self-auto px-5 py-3 rounded-2xl neu-btn text-slate-700 text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer">
+          <i class="ph ph-download-simple text-base text-blue-600"></i>
+          <span>Baixar Termo de Consentimento (TCLE)</span>
+        </button>
+      </div>
+
+      <!-- Leitura do TCLE em poço Neumórfico -->
+      <div class="neu-inset-deep rounded-2xl p-5 sm:p-7 max-h-80 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed font-sans select-text">
+        <div class="text-center pb-2 border-b border-slate-300/70">
+          <p class="font-extrabold text-slate-900 uppercase text-sm sm:text-base">USP - Universidade de São Paulo</p>
+          <p class="font-bold text-slate-600">TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO</p>
+        </div>
+        
+        <p>Você está sendo convidado pelo pesquisador <strong>Willer Bruno André Silva</strong>, do programa de Pós-graduação Mestrado em Neurociência e Comportamento da Universidade de São Paulo (USP) a participar desta pesquisa.</p>
+        
+        <p>O título da pesquisa é: <em>"Avaliação do Comportamento da dependência química: Uma comparação entre fumantes diários e não diários."</em> Informo que, após anuência, o participante da pesquisa receberá uma cópia do Termo de Consentimento Livre e Esclarecido assinado pelo pesquisador.</p>
+        
+        <p>Informo que o propósito da pesquisa é investigar como as pessoas tomam decisões em relação ao dinheiro, como isso se relaciona com o desejo de fumar e como a reação hedônica a algumas imagens podem influenciar esses comportamentos em fumantes regulares que fumam todos os dias e fumantes que não fumam todos os dias.</p>
+        
+        <p>Informo que a participação nesta pesquisa envolverá responder a uma série de questões envolvendo dados sociais e demográficos, avaliação da dependência de nicotina (se for fumante), o hábito de fumar (se for fumante), o uso de álcool e outras drogas e uma tarefa que avaliará a forma como são tomadas as decisões relacionadas a dinheiro.</p>
+        
+        <p>Informo que existe baixo risco ou desconfortos previstos da participação do estudo, por exemplo, dificuldade de interpretação dos formulários. Informo que, a fim de evitar e reduzir efeitos de riscos de recaídas para ex-fumantes, o participante poderá interromper ou pausar a qualquer momento sua participação na pesquisa.</p>
+        
+        <p>Ressalta-se que, com o objetivo de prevenir e minimizar fatores que possam aumentar o risco de recaída em ex-fumantes, o(a) participante que relatar forte desejo de consumir cigarro poderá, mediante concordância mútua, ser encaminhado(a) à Unidade Básica de Saúde (UBS) mais próxima para acolhimento e manejo psicológico. Nos casos que demandem atendimento imediato, o encaminhamento será realizado ao Centro de Atenção Psicossocial (CAPS), sob responsabilidade do pesquisador responsável.</p>
+        
+        <p>Informo que um dos possíveis benefícios da participação nesta pesquisa é que responder o questionário pode levar o indivíduo a refletir sobre os seus hábitos de consumo de tabaco. Além disso, a pesquisa ajudará a compreender o mecanismo de ação da tomada de decisão de indivíduos fumantes e ex-fumantes. Os resultados deste estudo poderão ser publicados, mas o nome do participante ou qualquer identificação não será revelado, mantendo-se a confidencialidade dos registros.</p>
+        
+        <p>Os questionários e tarefas não são ferramentas de diagnóstico do indivíduo, portanto não há estimativa de devolutiva individual. Aqueles que desejam receber o resultado da pesquisa podem entrar em contato por e-mail. Não há remuneração financeira pela participação.</p>
+        
+        <p>Dúvidas em relação à pesquisa serão respondidas pelo pesquisador responsável através do e-mail <strong>willerbrunoas@gmail.com</strong> ou <strong>willerbruno@usp.br</strong> e telefone (34) 9-99818-5348.</p>
+        
+        <p>Em relação às dúvidas sobre os direitos do participante, o Comitê de Ética em Pesquisa do Instituto de Psicologia da USP (CEPH-IPUSP) estará à disposição pelo e-mail <strong>cep.ip@usp.br</strong> ou telefone (11) 3091-4182. Endereço: Av. Prof. Mello Moraes, nº 1721, Bloco G, 2º andar, sala 27, Cidade Universitária, São Paulo - SP.</p>
+        
+        <div class="border-t border-slate-300/70 pt-3 text-[11px] text-slate-500 font-mono space-y-1">
+          <p>Documento assinado digitalmente: WILLER BRUNO ANDRÉ SILVA (gov.br)</p>
+          <p>De acordo com a Resolução 466/2012 do Conselho Nacional de Saúde.</p>
+        </div>
+      </div>
+
+      <form id="formParticipant" class="space-y-6" onsubmit="event.preventDefault(); startParticipantFlow();">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="space-y-2">
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider">Código do Participante</label>
+            <input type="text" id="participantId" required class="w-full px-4 py-3.5 rounded-2xl neu-inset font-mono text-sm text-slate-800 focus:outline-none">
+          </div>
+          <div class="space-y-2">
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider">Idade (em anos)</label>
+            <input type="number" id="participantAge" min="1" max="120" required placeholder="Ex: 24" class="w-full px-4 py-3.5 rounded-2xl neu-inset text-sm text-slate-800 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="neu-raised-sm rounded-2xl p-4 sm:p-5">
+          <label class="flex items-start gap-3.5 cursor-pointer">
+            <input type="checkbox" id="chkConsent" required class="mt-1 w-5 h-5 rounded-lg text-blue-600 accent-blue-600 cursor-pointer">
+            <span class="text-sm font-semibold text-slate-700 leading-snug">
+              Li e estou de acordo com o termo de consentimento livre e esclarecido
+            </span>
+          </label>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button type="submit" class="w-full sm:w-auto px-9 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-base">
+            <span>Avançar para Questionário</span>
+            <i class="ph ph-arrow-right font-bold"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- QUESTIONÁRIO SOCIODEMOGRÁFICO -->
+    <section id="viewSociodemographic" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8">
+      <div class="border-b border-slate-300/60 pb-4">
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+          Por favor, responda a todas as questões com sinceridade.
+        </p>
+      </div>
+
+      <form id="formSociodemographic" class="space-y-6" onsubmit="event.preventDefault(); submitSociodemographic();">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          
+          <!-- Identidade de gênero como 1ª pergunta -->
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Identidade de gênero:</label>
+            <select id="socio_identidadeGenero" required class="w-full px-4 py-2.5 rounded-xl neu-inset text-sm text-slate-800 focus:outline-none cursor-pointer">
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Mulher cisgênero">Mulher cisgênero</option>
+              <option value="Homem cisgênero">Homem cisgênero</option>
+              <option value="Mulher transgênero">Mulher transgênero</option>
+              <option value="Homem transgênero">Homem transgênero</option>
+              <option value="Não-binário">Não-binário</option>
+              <option value="Prefiro não responder">Prefiro não responder</option>
+            </select>
+          </div>
+
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Data de nascimento:</label>
+            <input type="date" id="socio_dataNascimento" required class="w-full px-4 py-2.5 rounded-xl neu-inset text-sm text-slate-800 focus:outline-none">
+          </div>
+
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Etnia:</label>
+            <select id="socio_etnia" required class="w-full px-4 py-2.5 rounded-xl neu-inset text-sm text-slate-800 focus:outline-none cursor-pointer">
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Branca">Branca</option>
+              <option value="Preta">Preta</option>
+              <option value="Parda">Parda</option>
+              <option value="Amarela">Amarela</option>
+              <option value="Indígena">Indígena</option>
+              <option value="Outra">Outra</option>
+            </select>
+          </div>
+
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Estado civil:</label>
+            <select id="socio_estadoCivil" required class="w-full px-4 py-2.5 rounded-xl neu-inset text-sm text-slate-800 focus:outline-none cursor-pointer">
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Solteiro">Solteiro</option>
+              <option value="Casado / União Estável">Casado / União Estável</option>
+              <option value="Divorciado / Separado">Divorciado / Separado</option>
+              <option value="Viúvo">Viúvo</option>
+            </select>
+          </div>
+
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Filhos (quantidade):</label>
+            <input type="number" id="socio_filhos" min="0" max="20" value="0" required class="w-full px-4 py-2.5 rounded-xl neu-inset text-sm text-slate-800 focus:outline-none">
+          </div>
+
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Escolaridade Máxima:</label>
+            <select id="socio_escolaridade" required class="w-full px-4 py-2.5 rounded-xl neu-inset text-sm text-slate-800 focus:outline-none cursor-pointer">
+              <option value="" disabled selected>Selecione...</option>
+              <option value="Nível médio incompleto">Nível médio incompleto</option>
+              <option value="Nível médio completo">Nível médio completo</option>
+              <option value="Nível superior incompleto">Nível superior incompleto</option>
+              <option value="Nível superior completo">Nível superior completo</option>
+              <option value="Pós-graduação">Pós-graduação</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Está trabalhando atualmente?</label>
+            <div class="flex gap-6 pt-1">
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_trabalho" value="Sim" required class="accent-blue-600">
+                <span>Sim</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_trabalho" value="Não" required class="accent-blue-600">
+                <span>Não</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Você já recebeu diagnóstico médico de alguma doença ou problemas?</label>
+            <div class="flex gap-6 pt-1">
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_diagnostico" value="Sim" required class="accent-blue-600">
+                <span>Sim</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_diagnostico" value="Não" required class="accent-blue-600">
+                <span>Não</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Faz uso de álcool?</label>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_alcool" value="Diariamente" required class="accent-blue-600">
+                <span>Diariamente</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_alcool" value="Semanalmente" required class="accent-blue-600">
+                <span>Semanalmente</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_alcool" value="Mensalmente" required class="accent-blue-600">
+                <span>Mensalmente</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_alcool" value="Não" required class="accent-blue-600">
+                <span>Não</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+            <label class="block text-sm font-bold text-slate-700">Faz uso de alguma outra droga?</label>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_outras_drogas" value="Diariamente" required class="accent-blue-600">
+                <span>Diariamente</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_outras_drogas" value="Semanalmente" required class="accent-blue-600">
+                <span>Semanalmente</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_outras_drogas" value="Mensalmente" required class="accent-blue-600">
+                <span>Mensalmente</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs sm:text-sm text-slate-700 cursor-pointer">
+                <input type="radio" name="socio_outras_drogas" value="Não" required class="accent-blue-600">
+                <span>Não</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-5 border-t border-slate-300/60 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Alternativa 'Não sou fumante' incorporada -->
+            <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+              <label class="block text-sm font-bold text-slate-700">Está em tratamento para parar de fumar atualmente em algum serviço de saúde?</label>
+              <div class="flex flex-wrap gap-4 pt-1">
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_tratamento" value="Sim" required class="accent-blue-600">
+                  <span>Sim</span>
+                </label>
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_tratamento" value="Não" required class="accent-blue-600">
+                  <span>Não</span>
+                </label>
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_tratamento" value="Não sou fumante" required class="accent-blue-600">
+                  <span>Não sou fumante</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+              <label class="block text-sm font-bold text-slate-700">Toma alguma medicação para parar de fumar?</label>
+              <div class="flex flex-wrap gap-4 pt-1">
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_medicacao" value="Sim" required class="accent-blue-600">
+                  <span>Sim</span>
+                </label>
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_medicacao" value="Não" required class="accent-blue-600">
+                  <span>Não</span>
+                </label>
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_medicacao" value="Não sou fumante" required class="accent-blue-600">
+                  <span>Não sou fumante</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
+              <label class="block text-sm font-bold text-slate-700">Quer parar de fumar?</label>
+              <div class="flex flex-wrap gap-4 pt-1">
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_quer_parar" value="Sim" required class="accent-blue-600">
+                  <span>Sim</span>
+                </label>
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_quer_parar" value="Não" required class="accent-blue-600">
+                  <span>Não</span>
+                </label>
+                <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                  <input type="radio" name="socio_quer_parar" value="Não sou fumante" required class="accent-blue-600">
+                  <span>Não sou fumante</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="neu-raised-sm rounded-2xl p-5 space-y-3">
+              <div>
+                <label class="block text-sm font-bold text-slate-700 mb-1">Em caso afirmativo à resposta anterior, já buscou auxílio para parar de fumar?</label>
+                <div class="flex gap-6 pt-1">
+                  <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                    <input type="radio" name="socio_buscou_auxilio" value="Sim" class="accent-blue-600">
+                    <span>Sim</span>
+                  </label>
+                  <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                    <input type="radio" name="socio_buscou_auxilio" value="Não" class="accent-blue-600">
+                    <span>Não</span>
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Em caso afirmativo, quantas vezes?</label>
+                <input type="number" id="socio_quantas_vezes_auxilio" min="0" placeholder="0" class="w-full px-3 py-2 rounded-xl neu-inset text-sm text-slate-800 focus:outline-none">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 flex justify-end border-t border-slate-300/60">
+          <button type="submit" class="w-full sm:w-auto px-9 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-base">
+            <span>Avançar para Questionário de Tabagismo</span>
+            <i class="ph ph-arrow-right font-bold"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- QUESTIONÁRIO DE TABAGISMO (GYTS) -->
+    <section id="viewGYTS" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8">
+      <div class="pb-3 border-b border-slate-300/60">
+        <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
+          As próximas perguntas são sobre fumar cigarros. Essas perguntas incluem apenas o consumo de cigarro industrializado ou feito à mão, isto é, cigarro de palha (ou paiero).
+        </p>
+      </div>
+
+      <form id="formGYTS" class="space-y-6" onsubmit="event.preventDefault(); submitGYTS();">
+        <!-- Q1 -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            1. Você já experimentou fumar cigarros (incluindo cigarros industrializados ou feitos a mão), mesmo que tenha sido apenas uma ou duas tragadas?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer hover:bg-slate-200/50 transition">
+              <input type="radio" name="gyts_q1" value="Sim" required class="accent-blue-600">
+              <span class="text-sm font-semibold text-slate-700">Sim.</span>
+            </label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer hover:bg-slate-200/50 transition">
+              <input type="radio" name="gyts_q1" value="Não" required class="accent-blue-600">
+              <span class="text-sm font-semibold text-slate-700">Não.</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Q2: Coluna esquerda inteira, depois direita -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            2. Quantos anos você tinha quando experimentou fumar um cigarro pela primeira vez (incluindo cigarros industrializados ou feitos a mão)?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q2" value="Nunca experimentei fumar cigarro" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Nunca experimentei fumar cigarro.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q2" value="7 anos ou menos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">7 anos ou menos.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q2" value="8 ou 9 anos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">8 ou 9 anos.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q2" value="10 ou 11 anos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">10 ou 11 anos.</span>
+              </label>
+            </div>
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q2" value="12 ou 13 anos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">12 ou 13 anos.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q2" value="14 ou 15 anos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">14 ou 15 anos.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q2" value="16 ou 17 anos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">16 ou 17 anos.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q2" value="18 anos ou mais" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">18 anos ou mais.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3: Coluna esquerda inteira, depois direita -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            3. Nos últimos 30 dias, em quantos dias você fumou cigarros (incluindo cigarros industrializados ou feitos a mão)?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q3" value="0 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">0 dias.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q3" value="1 ou 2 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">1 ou 2 dias.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q3" value="3 a 5 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">3 a 5 dias.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q3" value="6 a 9 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">6 a 9 dias.</span>
+              </label>
+            </div>
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q3" value="10 a 19 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">10 a 19 dias.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q3" value="20 a 29 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">20 a 29 dias.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q3" value="Todos os 30 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Todos os 30 dias.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4: Coluna esquerda inteira, depois direita -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            4. Pense nos dias em que fumou cigarros (incluindo cigarros industrializados ou feitos a mão) nos últimos 30 dias. Quantos cigarros costumava fumar por dia?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q4" value="Não fumei cigarros nos últimos 30 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Não fumei cigarros nos últimos 30 dias.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q4" value="Menos de 1 cigarro por dia" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Menos de 1 cigarro por dia.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q4" value="1 cigarro por dia" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">1 cigarro por dia.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q4" value="2 a 5 cigarros por dia" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">2 a 5 cigarros por dia.</span>
+              </label>
+            </div>
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q4" value="6 a 10 cigarros por dia" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">6 a 10 cigarros por dia.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q4" value="11 a 20 cigarros por dia" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">11 a 20 cigarros por dia.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q4" value="Mais de 20 cigarros por dia" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Mais de 20 cigarros por dia.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5: Coluna esquerda inteira, depois direita -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            5. Que sabores de cigarros (incluindo cigarros industrializados ou feitos a mão) você fumou nos últimos 30 dias?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q5" value="Não fumei cigarros nos últimos 30 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Não fumei cigarros nos últimos 30 dias.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q5" value="Não fumei cigarros aromatizados nos últimos 30 dias" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Não fumei cigarros aromatizados nos últimos 30 dias.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q5" value="Mentol" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Mentol.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q5" value="Menta ou gaultéria" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Menta ou gaultéria.</span>
+              </label>
+            </div>
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q5" value="Frutas (como frutas cítricas, cereja, manga, uva, maçã, morango, melancia, etc.)" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Frutas (como frutas cítricas, cereja, manga, uva, maçã, morango, melancia, etc.).</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q5" value="Doces, chocolate, chiclete ou outros doces" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Doces, chocolate, chiclete ou outros doces.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q5" value="Bebidas alcoólicas (como vinho, conhaque, margarita ou outros coquetéis)" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Bebidas alcoólicas (como vinho, conhaque, margarita ou outros coquetéis).</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="gyts_q5" value="Outros sabores (como cravo, canela, baunilha, café, refrigerantes, bebidas energéticas)" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-medium text-slate-700">Outros sabores (como cravo, canela, baunilha, café, refrigerantes, energéticos).</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 flex justify-end border-t border-slate-300/60">
+          <button type="submit" class="w-full sm:w-auto px-9 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-base">
+            <span>Avançar</span>
+            <i class="ph ph-arrow-right font-bold"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- QUESTIONÁRIO DE FISSURA (PARA FUMANTES) -->
+    <section id="viewCraving" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8">
+      <div class="neu-raised-sm rounded-2xl p-5 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
+        <p class="font-extrabold text-slate-900 uppercase tracking-wider text-xs">Instruções:</p>
+        <p>
+          Indique o quanto você concorda ou discorda com cada uma das seguintes declarações marcando um dos pontos entre <strong>DISCORDO FORTEMENTE</strong> e <strong>CONCORDO FORTEMENTE</strong>. Quanto mais perto você marcar do final ou do começo indica o quanto você concorda ou não. Se você não concorda ou discorda de uma das afirmações, coloque sua marca no espaço do meio (ponto 4).
+        </p>
+        <p class="text-slate-500 text-xs">
+          Por favor, complete todos os itens. Estamos interessados em como você está pensando ou sentindo-se <em>neste momento</em>, conforme você vai respondendo o questionário.
+        </p>
+      </div>
+
+      <form id="formCraving" class="space-y-6" onsubmit="event.preventDefault(); submitCraving();">
+        <div id="cravingItemsContainer" class="space-y-5">
+          <!-- 12 itens gerados via JS com escala de 1 a 7 -->
+        </div>
+
+        <div class="pt-4 flex justify-end border-t border-slate-300/60">
+          <button type="submit" class="w-full sm:w-auto px-9 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-base">
+            <span>Avançar</span>
+            <i class="ph ph-arrow-right font-bold"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- QUESTIONÁRIO DE TOLERÂNCIA DE FAGERSTRÖM (PARA FUMANTES) -->
+    <section id="viewFagerstrom" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8">
+      <div class="pb-3 border-b border-slate-300/60">
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+          Por favor, responda a cada uma das perguntas abaixo selecionando a alternativa que melhor descreve os seus hábitos com o fumo.
+        </p>
+      </div>
+
+      <form id="formFagerstrom" class="space-y-6" onsubmit="event.preventDefault(); submitFagerstrom();">
+        <!-- Q1 -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            1. Quanto tempo após acordar você fuma seu primeiro cigarro?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="fager_q1" value="3" data-text="Dentro de 5 minutos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-semibold text-slate-700">Dentro de 5 minutos</span>
+              </label>
+              <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="fager_q1" value="2" data-text="Entre 6 e 30 minutos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-semibold text-slate-700">Entre 6 e 30 minutos</span>
+              </label>
+            </div>
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="fager_q1" value="1" data-text="Entre 31 e 60 minutos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-semibold text-slate-700">Entre 31 e 60 minutos</span>
+              </label>
+              <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="fager_q1" value="0" data-text="Após 60 minutos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-semibold text-slate-700">Após 60 minutos</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            2. Você acha difícil não fumar em locais onde o fumo é proibido (como igrejas, bibliotecas, etc.)?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+              <input type="radio" name="fager_q2" value="1" data-text="Sim" required class="accent-blue-600">
+              <span class="text-xs sm:text-sm font-semibold text-slate-700">Sim</span>
+            </label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+              <input type="radio" name="fager_q2" value="0" data-text="Não" required class="accent-blue-600">
+              <span class="text-xs sm:text-sm font-semibold text-slate-700">Não</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            3. Qual o cigarro do dia que traz mais satisfação (ou que mais detestaria deixar de fumar)?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+              <input type="radio" name="fager_q3" value="1" data-text="O primeiro da manhã" required class="accent-blue-600">
+              <span class="text-xs sm:text-sm font-semibold text-slate-700">O primeiro da manhã</span>
+            </label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+              <input type="radio" name="fager_q3" value="0" data-text="Outros" required class="accent-blue-600">
+              <span class="text-xs sm:text-sm font-semibold text-slate-700">Outros</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            4. Quantos cigarros você fuma por dia?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="fager_q4" value="0" data-text="10 ou menos" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-semibold text-slate-700">10 ou menos</span>
+              </label>
+              <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="fager_q4" value="1" data-text="11 a 20" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-semibold text-slate-700">11 a 20</span>
+              </label>
+            </div>
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="fager_q4" value="2" data-text="21 a 30" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-semibold text-slate-700">21 a 30</span>
+              </label>
+              <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+                <input type="radio" name="fager_q4" value="3" data-text="31 ou mais" required class="accent-blue-600">
+                <span class="text-xs sm:text-sm font-semibold text-slate-700">31 ou mais</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            5. Você fuma mais freqüentemente pela manhã (ou nas 1as horas do dia) que no resto do dia?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+              <input type="radio" name="fager_q5" value="1" data-text="Sim" required class="accent-blue-600">
+              <span class="text-xs sm:text-sm font-semibold text-slate-700">Sim</span>
+            </label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+              <input type="radio" name="fager_q5" value="0" data-text="Não" required class="accent-blue-600">
+              <span class="text-xs sm:text-sm font-semibold text-slate-700">Não</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
+          <label class="block text-base font-bold text-slate-800">
+            6. Você fuma mesmo quando está tão doente que precisa ficar de cama a maior parte do tempo?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+              <input type="radio" name="fager_q6" value="1" data-text="Sim" required class="accent-blue-600">
+              <span class="text-xs sm:text-sm font-semibold text-slate-700">Sim</span>
+            </label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl neu-inset cursor-pointer">
+              <input type="radio" name="fager_q6" value="0" data-text="Não" required class="accent-blue-600">
+              <span class="text-xs sm:text-sm font-semibold text-slate-700">Não</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="pt-4 flex justify-end border-t border-slate-300/60">
+          <button type="submit" class="w-full sm:w-auto px-9 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-base">
+            <span>Iniciar Avaliação de Imagens</span>
+            <i class="ph ph-arrow-right font-bold"></i>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ETAPA 1: AVALIAÇÃO DE IMAGENS (EVA) - 2 PERGUNTAS -->
+    <section id="viewPhase1" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        
+        <!-- Coluna da Esquerda: Imagem Ampliada -->
+        <div class="lg:col-span-7 xl:col-span-8 flex flex-col">
+          <div class="relative neu-raised-lg rounded-3xl p-4 sm:p-6 flex-1 flex flex-col items-center justify-center overflow-hidden min-h-[380px] sm:min-h-[480px] lg:min-h-[560px] xl:min-h-[620px]">
+            <div id="evaWhiteOverlay" class="smooth-white-overlay rounded-3xl"></div>
+
+            <div id="imageDisplayContainer" class="w-full h-full min-h-[340px] sm:min-h-[440px] lg:min-h-[520px] xl:min-h-[580px] rounded-2xl overflow-hidden neu-inset-deep flex items-center justify-center p-3 relative">
+              <img id="currentStimulusImg" src="" alt="Estímulo Experimental" class="w-full h-full object-contain max-h-[580px] xl:max-h-[640px] transition-opacity duration-200">
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna da Direita: Ferramentas de Avaliação -->
+        <div class="lg:col-span-5 xl:col-span-4 neu-raised-lg rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6">
+          
+          <div class="space-y-6 my-auto">
+            <!-- Pergunta 1 -->
+            <div class="space-y-3">
+              <label class="block text-sm sm:text-base font-bold text-slate-800 text-center leading-snug">
+                Essa imagem é agradável ou desagradável?
+              </label>
+              <div class="px-2">
+                <input type="range" id="evaSlider1" min="0" max="100" value="50" class="neu-slider">
+                <div class="flex justify-between items-center text-xs sm:text-sm font-bold tracking-wide mt-2 px-1">
+                  <span class="text-rose-600 uppercase">Desagradável</span>
+                  <span class="text-emerald-600 uppercase">Agradável</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="w-full h-px bg-slate-300/60 my-4"></div>
+
+            <!-- Pergunta 2 (Atenção) -->
+            <div class="space-y-3">
+              <label class="block text-sm sm:text-base font-bold text-slate-800 text-center leading-snug">
+                O quanto essa imagem lhe chama a atenção?
+              </label>
+              <div class="px-2">
+                <input type="range" id="evaSlider2" min="0" max="100" value="50" class="neu-slider">
+                <div class="flex justify-between items-center text-xs sm:text-sm font-bold tracking-wide mt-2 px-1">
+                  <span class="text-rose-600 uppercase">Nada</span>
+                  <span class="text-emerald-600 uppercase">Muito</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botão Frutiger Aero -->
+          <div class="pt-4 flex justify-center">
+            <button id="btnConfirmEva" type="button" disabled class="w-full px-8 py-3.5 frutiger-btn font-extrabold text-base tracking-wide cursor-pointer flex items-center justify-center gap-2">
+              <span>Confirmar Avaliação</span>
+              <i class="ph ph-check text-lg"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INSTRUÇÕES DA TEDA -->
+    <section id="viewTedaInstructions" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-12 text-center space-y-8 max-w-3xl mx-auto">
+      <div class="w-24 h-24 mx-auto rounded-3xl neu-raised flex items-center justify-center text-blue-600 text-5xl">
+        <i class="ph ph-scales"></i>
+      </div>
+      <div class="space-y-4">
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight">Tarefa de Decisão Financeira</h2>
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto">
+          Nesta próxima etapa, serão apresentadas duas opções de valores em dinheiro na tela.
+        </p>
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto">
+          Você deverá escolher qual alternativa prefere clicando sobre ela. Não há respostas certas ou erradas; responda de acordo com a sua preferência pessoal.
+        </p>
+      </div>
+      <div class="pt-4">
+        <button type="button" onclick="startTedaPhase();" class="px-10 py-4 neu-btn-primary font-black rounded-2xl text-lg sm:text-xl flex items-center gap-3 mx-auto cursor-pointer">
+          <span>Iniciar Escolhas</span>
+          <i class="ph ph-arrow-right font-bold"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ETAPA 2: TEDA (DESVALORIZAÇÃO PELO ATRASO) -->
+    <section id="viewPhase2" class="hidden space-y-10">
+      
+      <!-- Enunciado com Destaque Cromático: 'receber' em verde, 'pagar' em vermelho -->
+      <div class="text-center pt-2">
+        <h2 id="tedaPromptQuestion" class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-snug text-slate-800"></h2>
+      </div>
+
+      <!-- Alternativas de Escolha da TEDA com botões idênticos -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
+        
+        <!-- Opção Imediata -->
+        <button id="btnChoiceImmediate" type="button" class="group relative neu-btn rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center gap-3 text-center cursor-pointer min-h-[220px]">
+          <span id="tedaImmediateValue" class="text-2xl sm:text-3xl md:text-4xl font-black font-mono text-slate-800 tracking-normal block w-full text-center">
+            R$ 500,00
+          </span>
+          <span class="text-2xl sm:text-3xl md:text-4xl font-black tracking-wider text-blue-600 mt-2 block w-full text-center">
+            HOJE
+          </span>
+        </button>
+
+        <!-- Opção Atrasada (Exatamente o mesmo design de botão) -->
+        <button id="btnChoiceDelayed" type="button" class="group relative neu-btn rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center gap-3 text-center cursor-pointer min-h-[220px]">
+          <span class="text-2xl sm:text-3xl md:text-4xl font-black font-mono text-slate-800 tracking-normal block w-full text-center">
+            R$ 1.000,00
+          </span>
+          
+          <div class="relative inline-block mt-2">
+            <div id="tedaDelayWhiteOverlay" class="smooth-white-overlay rounded-xl"></div>
+            <span id="tedaDelayedLabel" class="text-2xl sm:text-3xl md:text-4xl font-black tracking-wider text-blue-600 block uppercase">
+              EM UMA SEMANA
+            </span>
+          </div>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- TELA DE CONCLUSÃO DO PARTICIPANTE (SEM DADOS PRIVADOS DO PESQUISADOR) -->
+    <section id="viewConclusion" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-14 space-y-8 text-center max-w-2xl mx-auto">
+      <div class="w-24 h-24 mx-auto rounded-3xl neu-raised flex items-center justify-center text-emerald-600 text-5xl">
+        <i class="ph ph-check-fat"></i>
+      </div>
+      <div class="space-y-3">
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight">Experimento Concluído!</h2>
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-lg mx-auto">
+          Suas respostas foram registradas com sucesso. Agradecemos imensamente pela sua valorosa colaboração nesta pesquisa científica do Laboratório de Neurociência e Comportamento da USP.
+        </p>
+      </div>
+
+      <!-- Indicador de Envio em Nuvem -->
+      <div id="cloudSyncStatus" class="flex items-center justify-center gap-2 text-xs font-semibold text-slate-500 py-2">
+        <i id="cloudSyncIcon" class="ph ph-circle-notch animate-spin text-blue-600 text-base"></i>
+        <span id="cloudSyncText">Salvando respostas na base de dados...</span>
+      </div>
+
+      <div class="pt-4">
+        <button type="button" onclick="location.reload();" class="px-10 py-4 neu-btn text-slate-700 font-bold rounded-2xl text-base cursor-pointer">
+          Finalizar Sessão
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DO PESQUISADOR (ACESSO RESTRITO VIA CTRL+SHIFT+P OU ?admin=true) -->
+  <div id="modalResearcher" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="neu-raised-lg rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-300/60 pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl neu-raised-sm flex items-center justify-center text-blue-600">
+            <i class="ph ph-gear-six text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-slate-800">Painel de Controle do Pesquisador</h3>
+            <span class="text-xs text-slate-500 font-medium">Registro completo: todas as escolhas TEDA e avaliações EVA</span>
+          </div>
+        </div>
+        <button id="btnCloseResearcherModal" type="button" class="w-9 h-9 rounded-xl neu-btn flex items-center justify-center text-slate-600 hover:text-slate-900 cursor-pointer">
+          <i class="ph ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Dados do último participante -->
+      <div id="researcherLastParticipantSection" class="hidden neu-inset-deep rounded-2xl p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-300/70 pb-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Último Participante: <span id="researcherLastParticipantId" class="text-blue-600 font-mono"></span></h4>
+          <span class="text-xs font-mono text-slate-500">8 atrasos &bull; Ganho & Pagamento</span>
+        </div>
+        <div id="summaryIndifferenceContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs"></div>
+        <div class="pt-2 flex justify-end">
+          <button type="button" onclick="exportDataToExcel();" class="px-5 py-2.5 rounded-xl neu-btn-primary text-xs font-bold flex items-center gap-2 cursor-pointer">
+            <i class="ph ph-file-xls text-base"></i>
+            <span>Baixar Planilha Individual Completa (.xlsx)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Configuração de Coleta Remota (Google Sheets Webhook) -->
+      <div class="border-t border-slate-300/60 pt-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <i class="ph ph-cloud-arrow-up text-base text-emerald-600"></i>
+            <span>Coleta Remota &bull; Google Sheets</span>
+          </h4>
+          <span id="sheetConnectionBadge" class="text-[11px] font-semibold px-2 py-0.5 rounded-lg neu-inset text-slate-500">
+            Não configurado
+          </span>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Cole abaixo a URL do Web App gerada no Google Apps Script para receber os dados dos participantes em tempo real:
+        </p>
+        <div class="space-y-2">
+          <input type="url" id="inputGoogleSheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl neu-inset font-mono text-xs text-slate-800 focus:outline-none">
+          <div class="flex justify-end gap-2">
+            <button type="button" onclick="testGoogleSheetsWebhook();" class="px-3 py-1.5 rounded-lg neu-btn text-slate-700 text-xs font-bold cursor-pointer">
+              Testar Conexão
+            </button>
+            <button type="button" onclick="saveGoogleSheetsWebhook();" class="px-4 py-1.5 rounded-lg neu-btn-primary text-xs font-bold cursor-pointer">
+              Salvar URL
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status das 120 Imagens -->
+      <div class="border-t border-slate-300/60 pt-4 space-y-4">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Banco de Estímulos Visuais (120 Imagens)</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          As 120 imagens são lidas automaticamente da pasta <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-slate-800">imagens/</code> no repositório. Você também pode importar uma pasta local para cache permanente nesta máquina:
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <label class="px-4 py-2.5 rounded-xl neu-btn text-slate-700 text-xs font-bold cursor-pointer flex items-center gap-2">
+            <i class="ph ph-upload-simple text-base text-blue-600"></i>
+            <span>Carregar Imagens Locais (Backup)</span>
+            <input type="file" id="inputLocalImages" multiple accept="image/*" class="hidden" onchange="handleLocalImagesUpload(event)">
+          </label>
+          <button type="button" onclick="restoreDefaultStimuli();" class="px-4 py-2.5 rounded-xl neu-btn text-slate-700 text-xs font-bold cursor-pointer">
+            Restaurar 120 Padrões
+          </button>
+        </div>
+        <div id="stimuliStatusText" class="text-xs font-mono text-slate-500"></div>
+      </div>
+
+      <!-- Modo de Verificação Rápida -->
+      <div class="border-t border-slate-300/60 pt-4 space-y-2">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Modo de Verificação Rápida</h4>
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" id="chkDemoMode" onchange="toggleDemoMode(this.checked)" class="w-4 h-4 rounded text-blue-600 accent-blue-600">
+          <span class="text-xs text-slate-700 font-semibold">Ativar modo de teste rápido (reduz para 4 imagens e 2 atrasos na TEDA)</span>
+        </label>
+      </div>
+
+      <!-- Banco de Dados Acumulado -->
+      <div class="border-t border-slate-300/60 pt-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Participantes Salvos Localmente</h4>
+          <span id="savedParticipantsCount" class="text-xs font-mono font-bold text-blue-600">0 registro(s)</span>
+        </div>
+        <div id="savedParticipantsList" class="neu-inset rounded-2xl p-4 max-h-40 overflow-y-auto text-xs font-mono text-slate-600 space-y-1">
+          Nenhum participante salvo nesta máquina até o momento.
+        </div>
+        <div class="flex gap-3">
+          <button type="button" onclick="exportAccumulatedDatabase();" class="px-4 py-2.5 rounded-xl neu-btn-primary text-xs font-bold flex items-center gap-1.5 cursor-pointer">
+            <i class="ph ph-database"></i>
+            <span>Exportar Banco Acumulado (.xlsx)</span>
+          </button>
+          <button type="button" onclick="clearAllStoredData();" class="px-4 py-2.5 rounded-xl neu-btn text-rose-600 text-xs font-bold cursor-pointer">
+            Limpar Banco Local
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificação -->
+  <div id="toastBox" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none px-5 py-3.5 rounded-2xl neu-raised-lg text-slate-800 text-sm flex items-center gap-2.5 font-semibold">
+    <i id="toastIcon" class="ph ph-info text-blue-600 text-xl"></i>
+    <span id="toastMsg">Mensagem</span>
+  </div>
+
+  <footer class="w-full px-6 py-4 text-center text-xs text-slate-500 font-medium">
+    Laboratório de Neurociência e Comportamento &bull; USP &bull; Resolução CNS 466/2012
+  </footer>
+
+  <script>
+    let isDemoMode = false;
+    let isTransitioning = false;
+    let isTedaTransitioning = false;
+
+    let participant = {
+      id: '',
+      age: '',
+      gender: '',
+      smokingGroup: '',
+      startedAt: null,
+      completedAt: null,
+      sociodemographic: {},
+      gyts: {},
+      craving: null,
+      fagerstrom: null
+    };
+
+    const CRAVING_QUESTIONS = [
+      "1. Eu gostaria de um cigarro agora.",
+      "2. Se eu fumasse agora, eu não seria capaz de parar.",
+      "3. Se eu tivesse um cigarro aceso na minha mão, eu provavelmente fumaria.",
+      "4. Neste momento um cigarro seria gostoso.",
+      "5. Eu estaria menos irritado agora se eu fumasse.",
+      "6. Seria difícil desprezar a chance de fumar.",
+      "7. Eu não poderia me impedir de fumar se eu tivesse vários cigarros.",
+      "8. Fumar um cigarro seria prazeroso.",
+      "9. Se eu estivesse fumando agora eu poderia pensar mais claramente.",
+      "10. Eu não seria capaz de controlar quanto eu fumo se eu tivesse muitos cigarros aqui.",
+      "11. Eu não poderia facilmente limitar o quanto eu fumaria agora.",
+      "12. Eu poderia controlar muitas coisas agora se eu pudesse fumar."
+    ];
+
+    let stimuliList = [];
+    let currentImageIndex = 0;
+    let currentImageStartTime = 0;
+    let evaResponses = [];
+    let sliderInteractions = { slider1: false, slider2: false };
+
+    const TEDA_FULL_DELAYS = [
+      { id: '1sem', label: 'EM UMA SEMANA', days: 7 },
+      { id: '1mes', label: 'EM UM MÊS', days: 30 },
+      { id: '6meses', label: 'EM 6 MESES', days: 180 },
+      { id: '1ano', label: 'EM 1 ANO', days: 365 },
+      { id: '3anos', label: 'EM 3 ANOS', days: 1095 },
+      { id: '5anos', label: 'EM 5 ANOS', days: 1825 },
+      { id: '10anos', label: 'EM 10 ANOS', days: 3650 },
+      { id: '25anos', label: 'EM 25 ANOS', days: 9125 }
+    ];
+
+    let tedaConditions = ['ganho', 'perda'];
+    let currentConditionIndex = 0;
+    let currentDelayIndex = 0;
+
+    let valorAtrasado = 1000;
+    let valorImediato = 500;
+    let ajuste = 250;
+    let tentativa = 1;
+    let tedaTrialStartTime = 0;
+
+    let tedaTrialLogs = [];
+    let tedaIndifferencePoints = [];
+
+    const STORAGE_KEY_GSHEET = 'eva_teda_google_sheet_url';
+    const STORAGE_KEY_CUSTOM_IMAGES = 'eva_teda_custom_images_cache';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const randNum = Math.floor(100 + Math.random() * 900);
+      document.getElementById('participantId').value = `P_${new Date().getFullYear().toString().substr(-2)}${randNum}`;
+
+      inicializarBancoImagens();
+      updateStimuliStatusBadge();
+      renderStoredParticipantsList();
+      renderCravingFormItems();
+      loadSavedGoogleSheetUrl();
+
+      // Atalho de teclado para o pesquisador: Ctrl + Shift + P
+      window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && (e.key === 'P' || e.key === 'p')) {
+          e.preventDefault();
+          openResearcherModal();
+        }
+      });
+
+      // Abertura via URL (?admin=true)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('admin') === 'true') {
+        const btn = document.getElementById('btnOpenResearcherModal');
+        btn.classList.remove('hidden');
+        btn.addEventListener('click', openResearcherModal);
+      }
+
+      document.getElementById('btnCloseResearcherModal').addEventListener('click', closeResearcherModal);
+
+      // Sliders táteis da EVA com cálculo contínuo de gradiente
+      const s1 = document.getElementById('evaSlider1');
+      const s2 = document.getElementById('evaSlider2');
+      const btnConfirm = document.getElementById('btnConfirmEva');
+
+      [s1, s2].forEach((slider, idx) => {
+        updateSliderColor(slider);
+        slider.addEventListener('input', () => {
+          sliderInteractions[`slider${idx + 1}`] = true;
+          updateSliderColor(slider);
+          checkEvaCanConfirm();
+        });
+      });
+
+      btnConfirm.addEventListener('click', confirmEvaResponse);
+
+      // Botões de Escolha da TEDA
+      document.getElementById('btnChoiceImmediate').addEventListener('click', () => {
+        if (!isTedaTransitioning) registrarEscolha('imediato');
+      });
+      document.getElementById('btnChoiceDelayed').addEventListener('click', () => {
+        if (!isTedaTransitioning) registrarEscolha('atrasado');
+      });
+    });
+
+    function identificarCategoriaImagem(nomeArquivo) {
+      const lower = (nomeArquivo || '').toLowerCase();
+      if (lower.startsWith('isolado')) return 'Cigarro em contexto não social';
+      if (lower.startsWith('social')) return 'Cigarro em contexto social';
+      if (lower.startsWith('neutra')) return 'Imagens neutras';
+      if (lower.startsWith('positiva')) return 'Imagens positivas';
+      return 'Outras';
+    }
+
+    function inicializarBancoImagens() {
+      try {
+        const cached = localStorage.getItem(STORAGE_KEY_CUSTOM_IMAGES);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            stimuliList = parsed;
+            embaralharEstimulos(stimuliList);
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Cache local não lido:', e);
+      }
+
+      stimuliList = criarListaImagensPadrao(isDemoMode);
+    }
+
+    function criarListaImagensPadrao(isDemo = false) {
+      const list = [];
+      const prefixes = [
+        { prefix: 'isolado', category: 'Cigarro em contexto não social' },
+        { prefix: 'social', category: 'Cigarro em contexto social' },
+        { prefix: 'neutra', category: 'Imagens neutras' },
+        { prefix: 'positiva', category: 'Imagens positivas' }
+      ];
+
+      const qtd = isDemo ? 1 : 30;
+
+      prefixes.forEach(p => {
+        for (let i = 1; i <= qtd; i++) {
+          const num = String(i).padStart(2, '0');
+          const filename = `${p.prefix}_${num}.jpg`;
+          list.push({
+            id: `${p.prefix}_${num}`,
+            name: filename,
+            category: p.category,
+            src: `imagens/${filename}`
+          });
+        }
+      });
+
+      embaralharEstimulos(list);
+      return list;
+    }
+
+    function embaralharEstimulos(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function generateSvgPlaceholder(name, category) {
+      let colorA = '#94a3b8';
+      let colorB = '#64748b';
+      if (name.startsWith('isolado')) { colorA = '#fed7aa'; colorB = '#ea580c'; }
+      else if (name.startsWith('social')) { colorA = '#fecdd3'; colorB = '#e11d48'; }
+      else if (name.startsWith('neutra')) { colorA = '#cbd5e1'; colorB = '#475569'; }
+      else if (name.startsWith('positiva')) { colorA = '#bbf7d0'; colorB = '#16a34a'; }
+
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+          <rect width="800" height="600" fill="#e2e8f1"/>
+          <rect x="50" y="50" width="700" height="500" rx="30" fill="${colorA}"/>
+          <text x="50%" y="46%" font-family="system-ui, sans-serif" font-weight="800" font-size="34" fill="#ffffff" text-anchor="middle">
+            ${category}
+          </text>
+          <text x="50%" y="54%" font-family="monospace" font-size="22" font-weight="700" fill="#ffffff" opacity="0.9" text-anchor="middle">
+            imagens/${name}
+          </text>
+        </svg>
+      `;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    function handleLocalImagesUpload(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      const customList = [];
+      Array.from(files).forEach((file, idx) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const category = identificarCategoriaImagem(file.name);
+          customList.push({
+            id: `IMG_${idx + 1}`,
+            name: file.name,
+            category: category,
+            src: e.target.result
+          });
+
+          if (customList.length === files.length) {
+            stimuliList = customList;
+            embaralharEstimulos(stimuliList);
+
+            try {
+              localStorage.setItem(STORAGE_KEY_CUSTOM_IMAGES, JSON.stringify(stimuliList));
+            } catch (err) {
+              console.warn('Limite de armazenamento local excedido. Imagens salvas apenas nesta sessão.');
+            }
+
+            updateStimuliStatusBadge();
+            showToast(`${files.length} imagens carregadas com sucesso!`);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function restoreDefaultStimuli() {
+      localStorage.removeItem(STORAGE_KEY_CUSTOM_IMAGES);
+      stimuliList = criarListaImagensPadrao(isDemoMode);
+      updateStimuliStatusBadge();
+      showToast('120 imagens padrão configuradas da pasta imagens/.');
+    }
+
+    function toggleDemoMode(checked) {
+      isDemoMode = checked;
+      stimuliList = criarListaImagensPadrao(isDemoMode);
+      updateStimuliStatusBadge();
+      showToast(isDemoMode ? 'Modo de teste rápido ativado.' : 'Modo experimental completo ativado.');
+    }
+
+    function updateStimuliStatusBadge() {
+      const elem = document.getElementById('stimuliStatusText');
+      if (elem) {
+        elem.textContent = `Estímulos prontos: ${stimuliList.length} imagem(ns) configurada(s).`;
+      }
+    }
+
+    function renderCravingFormItems() {
+      const container = document.getElementById('cravingItemsContainer');
+      if (!container) return;
+
+      container.innerHTML = CRAVING_QUESTIONS.map((qText, index) => {
+        const itemNumber = index + 1;
+        return `
+          <div class="neu-raised-sm rounded-2xl p-5 space-y-3">
+            <label class="block text-sm sm:text-base font-bold text-slate-800 leading-snug">
+              ${qText}
+            </label>
+            <div class="pt-2">
+              <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">
+                <span class="text-rose-600">Discordo Fortemente</span>
+                <span class="text-slate-400 hidden sm:inline">Neutro</span>
+                <span class="text-emerald-600">Concordo Fortemente</span>
+              </div>
+              <div class="grid grid-cols-7 gap-2 text-center">
+                ${[1, 2, 3, 4, 5, 6, 7].map(val => `
+                  <label class="flex flex-col items-center justify-center p-2.5 rounded-xl neu-inset hover:bg-slate-200/60 cursor-pointer transition has-[:checked]:bg-blue-50 has-[:checked]:border-2 has-[:checked]:border-blue-600">
+                    <input type="radio" name="craving_item_${itemNumber}" value="${val}" required class="accent-blue-600 mb-1 cursor-pointer">
+                    <span class="text-xs font-mono font-bold text-slate-700">${val}</span>
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function startParticipantFlow() {
+      const code = document.getElementById('participantId').value.trim();
+      const age = parseInt(document.getElementById('participantAge').value, 10);
+      const consent = document.getElementById('chkConsent').checked;
+
+      if (!consent) {
+        showToast('É obrigatório concordar com o TCLE para participar.', true);
+        return;
+      }
+
+      if (isNaN(age) || age < 18) {
+        document.getElementById('viewOnboarding').classList.add('hidden');
+        document.getElementById('viewIneligible').classList.remove('hidden');
+        document.getElementById('badgeCurrentPhase').textContent = 'Inelegível';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      participant.id = code || `P_${Date.now()}`;
+      participant.age = age;
+      participant.startedAt = new Date().toISOString();
+
+      document.getElementById('viewOnboarding').classList.add('hidden');
+      document.getElementById('viewSociodemographic').classList.remove('hidden');
+      document.getElementById('badgeCurrentPhase').textContent = 'Questionário';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function submitSociodemographic() {
+      const form = document.getElementById('formSociodemographic');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const getRadioValue = name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        return checked ? checked.value : '';
+      };
+
+      const genero = document.getElementById('socio_identidadeGenero').value;
+      participant.gender = genero;
+
+      participant.sociodemographic = {
+        identidadeGenero: genero,
+        dataNascimento: document.getElementById('socio_dataNascimento').value,
+        etnia: document.getElementById('socio_etnia').value,
+        estadoCivil: document.getElementById('socio_estadoCivil').value,
+        filhos: parseInt(document.getElementById('socio_filhos').value, 10) || 0,
+        escolaridade: document.getElementById('socio_escolaridade').value,
+        trabalhandoAtualmente: getRadioValue('socio_trabalho'),
+        diagnosticoDoenca: getRadioValue('socio_diagnostico'),
+        usoAlcool: getRadioValue('socio_alcool'),
+        usoOutrasDrogas: getRadioValue('socio_outras_drogas'),
+        tratamentoServicoSaude: getRadioValue('socio_tratamento'),
+        medicacaoPararFumar: getRadioValue('socio_medicacao'),
+        querPararFumar: getRadioValue('socio_quer_parar'),
+        buscouAuxilio: getRadioValue('socio_buscou_auxilio') || 'Não',
+        quantasVezesAuxilio: document.getElementById('socio_quantas_vezes_auxilio').value || '0'
+      };
+
+      document.getElementById('viewSociodemographic').classList.add('hidden');
+      document.getElementById('viewGYTS').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function submitGYTS() {
+      const form = document.getElementById('formGYTS');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const getRadioValue = name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        return checked ? checked.value : '';
+      };
+
+      const q1 = getRadioValue('gyts_q1');
+      const q2 = getRadioValue('gyts_q2');
+      const q3 = getRadioValue('gyts_q3');
+      const q4 = getRadioValue('gyts_q4');
+      const q5 = getRadioValue('gyts_q5');
+
+      participant.gyts = {
+        q1_experimentou: q1,
+        q2_idade_primeira_vez: q2,
+        q3_dias_fumados_30d: q3,
+        q4_quantidade_cigarros_dia: q4,
+        q5_sabores_cigarros: q5
+      };
+
+      if (q3 === "Todos os 30 dias") {
+        participant.smokingGroup = "Fumantes diários";
+      } else if (q3 === "0 dias") {
+        participant.smokingGroup = "Não fumante";
+      } else {
+        participant.smokingGroup = "Fumantes não diários";
+      }
+
+      const isSmoker = (participant.smokingGroup === "Fumantes diários" || participant.smokingGroup === "Fumantes não diários");
+
+      document.getElementById('viewGYTS').classList.add('hidden');
+
+      if (isSmoker) {
+        document.getElementById('viewCraving').classList.remove('hidden');
+        document.getElementById('badgeCurrentPhase').textContent = 'Questionário';
+      } else {
+        participant.craving = null;
+        participant.fagerstrom = null;
+        document.getElementById('viewPhase1').classList.remove('hidden');
+        document.getElementById('badgeCurrentPhase').textContent = 'Etapa 1';
+        currentImageIndex = 0;
+        evaResponses = [];
+        loadCurrentImage(false);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function submitCraving() {
+      const cravingScores = {};
+      let totalScore = 0;
+
+      for (let i = 1; i <= 12; i++) {
+        const checked = document.querySelector(`input[name="craving_item_${i}"]:checked`);
+        if (!checked) {
+          showToast(`Por favor, responda ao item ${i} do questionário de fissura.`, true);
+          return;
+        }
+        const val = parseInt(checked.value, 10);
+        cravingScores[`item_${i}`] = val;
+        totalScore += val;
+      }
+
+      cravingScores.escoreTotal = totalScore;
+      cravingScores.media = parseFloat((totalScore / 12).toFixed(2));
+      cravingScores.respondidoEm = new Date().toISOString();
+
+      participant.craving = cravingScores;
+
+      document.getElementById('viewCraving').classList.add('hidden');
+      document.getElementById('viewFagerstrom').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function submitFagerstrom() {
+      const getCheckedRadio = name => document.querySelector(`input[name="${name}"]:checked`);
+
+      let totalScore = 0;
+      const responses = {};
+
+      for (let i = 1; i <= 6; i++) {
+        const radio = getCheckedRadio(`fager_q${i}`);
+        if (!radio) {
+          showToast(`Por favor, responda à pergunta ${i} do questionário.`, true);
+          return;
+        }
+        const pts = parseInt(radio.value, 10);
+        const text = radio.getAttribute('data-text') || '';
+        responses[`q${i}_resposta`] = text;
+        responses[`q${i}_pontos`] = pts;
+        totalScore += pts;
+      }
+
+      let grauDependencia = '';
+      if (totalScore <= 2) grauDependencia = 'Muito Baixo';
+      else if (totalScore <= 4) grauDependencia = 'Baixo';
+      else if (totalScore === 5) grauDependencia = 'Médio';
+      else if (totalScore <= 7) grauDependencia = 'Elevado';
+      else grauDependencia = 'Muito Elevado';
+
+      responses.escoreTotal = totalScore;
+      responses.grauDependencia = grauDependencia;
+      responses.respondidoEm = new Date().toISOString();
+
+      participant.fagerstrom = responses;
+
+      document.getElementById('viewFagerstrom').classList.add('hidden');
+      document.getElementById('viewPhase1').classList.remove('hidden');
+      document.getElementById('badgeCurrentPhase').textContent = 'Etapa 1';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      currentImageIndex = 0;
+      evaResponses = [];
+      loadCurrentImage(false);
+    }
+
+    function updateSliderColor(slider) {
+      if (!slider) return;
+      const val = parseFloat(slider.value);
+      let r, g, b, borderR, borderG, borderB, glowR, glowB;
+
+      if (val <= 50) {
+        const t = val / 50;
+        r = Math.round(225 + (148 - 225) * t);
+        g = Math.round(29 + (163 - 29) * t);
+        b = Math.round(72 + (184 - 72) * t);
+
+        borderR = Math.round(190 + (100 - 190) * t);
+        borderG = Math.round(18 + (116 - 18) * t);
+        borderB = Math.round(60 + (139 - 60) * t);
+
+        glowR = r; glowB = b;
+      } else {
+        const t = (val - 50) / 50;
+        r = Math.round(148 + (22 - 148) * t);
+        g = Math.round(163 + (163 - 163) * t);
+        b = Math.round(184 + (74 - 184) * t);
+
+        borderR = Math.round(100 + (15 - 100) * t);
+        borderG = Math.round(116 + (118 - 116) * t);
+        borderB = Math.round(139 + (54 - 139) * t);
+
+        glowR = r; glowB = b;
+      }
+
+      slider.style.setProperty('--thumb-bg', `rgb(${r}, ${g}, ${b})`);
+      slider.style.setProperty('--thumb-border', `rgb(${borderR}, ${borderG}, ${borderB})`);
+      slider.style.setProperty('--thumb-glow', `rgba(${glowR}, ${g}, ${glowB}, 0.5)`);
+    }
+
+    function resetEvaSliders() {
+      const s1 = document.getElementById('evaSlider1');
+      const s2 = document.getElementById('evaSlider2');
+
+      [s1, s2].forEach(slider => {
+        if (slider) {
+          slider.value = 50;
+          updateSliderColor(slider);
+        }
+      });
+
+      sliderInteractions = { slider1: false, slider2: false };
+      checkEvaCanConfirm();
+    }
+
+    function checkEvaCanConfirm() {
+      const btn = document.getElementById('btnConfirmEva');
+      const ready = sliderInteractions.slider1 && sliderInteractions.slider2;
+      btn.disabled = !ready;
+    }
+
+    function loadCurrentImage(withWhiteFade = false) {
+      if (currentImageIndex >= stimuliList.length) {
+        document.getElementById('viewPhase1').classList.add('hidden');
+        document.getElementById('viewTedaInstructions').classList.remove('hidden');
+        document.getElementById('badgeCurrentPhase').textContent = 'Instruções';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const stim = stimuliList[currentImageIndex];
+      const imgElem = document.getElementById('currentStimulusImg');
+      const evaOverlay = document.getElementById('evaWhiteOverlay');
+
+      imgElem.onerror = () => {
+        imgElem.onerror = null;
+        imgElem.src = generateSvgPlaceholder(stim.name, stim.category);
+      };
+
+      if (withWhiteFade) {
+        isTransitioning = true;
+        evaOverlay.classList.add('active');
+
+        setTimeout(() => {
+          imgElem.src = stim.src;
+          resetEvaSliders();
+          evaOverlay.classList.remove('active');
+
+          setTimeout(() => {
+            isTransitioning = false;
+            currentImageStartTime = performance.now();
+          }, 250);
+        }, 250);
+      } else {
+        imgElem.src = stim.src;
+        resetEvaSliders();
+        currentImageStartTime = performance.now();
+      }
+    }
+
+    function confirmEvaResponse() {
+      if (isTransitioning) return;
+
+      const reactionTime = Math.round(performance.now() - currentImageStartTime);
+      const stim = stimuliList[currentImageIndex];
+
+      const resp1 = parseInt(document.getElementById('evaSlider1').value, 10);
+      const resp2 = parseInt(document.getElementById('evaSlider2').value, 10);
+
+      evaResponses.push({
+        ordemApresentacao: currentImageIndex + 1,
+        idImagem: stim.id,
+        categoria: stim.category || identificarCategoriaImagem(stim.name),
+        nomeArquivo: stim.name,
+        eva1_Agradavel_Desagradavel: resp1,
+        eva3_Atencao: resp2,
+        tempoReacaoMs: reactionTime,
+        timestamp: new Date().toISOString()
+      });
+
+      currentImageIndex++;
+      loadCurrentImage(true);
+    }
+
+    function startTedaPhase() {
+      document.getElementById('viewTedaInstructions').classList.add('hidden');
+      document.getElementById('viewPhase2').classList.remove('hidden');
+      document.getElementById('badgeCurrentPhase').textContent = 'Etapa 2';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      currentConditionIndex = 0;
+      currentDelayIndex = 0;
+      tedaTrialLogs = [];
+      tedaIndifferencePoints = [];
+
+      iniciarBlocoAtraso(false);
+    }
+
+    function getActiveDelays() {
+      if (isDemoMode) {
+        return [TEDA_FULL_DELAYS[0], TEDA_FULL_DELAYS[1]];
+      }
+      return TEDA_FULL_DELAYS;
+    }
+
+    function iniciarBlocoAtraso(withFade = true) {
+      valorAtrasado = 1000;
+      valorImediato = valorAtrasado / 2;
+      ajuste = valorAtrasado / 4;
+      tentativa = 1;
+
+      apresentarTentativaAtual(withFade);
+    }
+
+    function apresentarTentativaAtual(withFade = false) {
+      const delays = getActiveDelays();
+      const currentDelay = delays[currentDelayIndex];
+      const condition = tedaConditions[currentConditionIndex];
+
+      const promptElem = document.getElementById('tedaPromptQuestion');
+      if (condition === 'ganho') {
+        promptElem.innerHTML = `Como você prefere <span class="text-emerald-600 font-black underline underline-offset-4 decoration-emerald-500/40">receber</span>?`;
+      } else {
+        promptElem.innerHTML = `Como você prefere <span class="text-rose-600 font-black underline underline-offset-4 decoration-rose-500/40">pagar</span>?`;
+      }
+
+      document.getElementById('tedaImmediateValue').textContent = formatCurrency(valorImediato);
+
+      const delayLabelElem = document.getElementById('tedaDelayedLabel');
+      const delayOverlay = document.getElementById('tedaDelayWhiteOverlay');
+
+      if (withFade) {
+        isTedaTransitioning = true;
+        delayOverlay.classList.add('active');
+
+        setTimeout(() => {
+          delayLabelElem.textContent = currentDelay.label;
+          delayOverlay.classList.remove('active');
+
+          setTimeout(() => {
+            isTedaTransitioning = false;
+            tedaTrialStartTime = performance.now();
+          }, 250);
+        }, 250);
+      } else {
+        delayLabelElem.textContent = currentDelay.label;
+        tedaTrialStartTime = performance.now();
+      }
+    }
+
+    function registrarEscolha(escolha) {
+      const reactionTime = Math.round(performance.now() - tedaTrialStartTime);
+      const delays = getActiveDelays();
+      const delayObj = delays[currentDelayIndex];
+      const condition = tedaConditions[currentConditionIndex];
+
+      tedaTrialLogs.push({
+        idParticipante: participant.id,
+        condicao: condition,
+        atrasoId: delayObj.id,
+        atrasoRotulo: delayObj.label,
+        diasAtraso: delayObj.days,
+        tentativa: tentativa,
+        valorImediatoOferecido: valorImediato,
+        valorAtrasadoFixo: valorAtrasado,
+        escolha: escolha,
+        ajusteAplicado: ajuste,
+        tempoReacaoMs: reactionTime,
+        timestamp: new Date().toISOString()
+      });
+
+      if (escolha === "atrasado") {
+        valorImediato += ajuste;
+      }
+      if (escolha === "imediato") {
+        valorImediato -= ajuste;
+      }
+
+      ajuste = ajuste / 2;
+
+      if (tentativa === 6) {
+        const pontoIndiferenca = valorImediato;
+        finalizarBloco(pontoIndiferenca);
+        return;
+      }
+
+      tentativa++;
+      apresentarTentativaAtual(false);
+    }
+
+    function finalizarBloco(pontoIndiferenca) {
+      const delays = getActiveDelays();
+      const delayObj = delays[currentDelayIndex];
+      const condition = tedaConditions[currentConditionIndex];
+
+      tedaIndifferencePoints.push({
+        condicao: condition,
+        atrasoId: delayObj.id,
+        atrasoRotulo: delayObj.label,
+        diasAtraso: delayObj.days,
+        pontoIndiferenca: pontoIndiferenca,
+        proporcao: parseFloat((pontoIndiferenca / valorAtrasado).toFixed(4))
+      });
+
+      currentDelayIndex++;
+
+      if (currentDelayIndex < delays.length) {
+        iniciarBlocoAtraso(true);
+      } else {
+        currentDelayIndex = 0;
+        currentConditionIndex++;
+
+        if (currentConditionIndex < tedaConditions.length) {
+          iniciarBlocoAtraso(true);
+        } else {
+          concluirExperimento();
+        }
+      }
+    }
+
+    function concluirExperimento() {
+      participant.completedAt = new Date().toISOString();
+
+      document.getElementById('viewPhase2').classList.add('hidden');
+      document.getElementById('viewConclusion').classList.remove('hidden');
+      document.getElementById('badgeCurrentPhase').textContent = 'Concluído';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      renderIndifferenceSummary();
+      saveCurrentParticipantToStorage();
+      renderStoredParticipantsList();
+
+      const lastSection = document.getElementById('researcherLastParticipantSection');
+      const lastIdElem = document.getElementById('researcherLastParticipantId');
+      if (lastSection && lastIdElem) {
+        lastSection.classList.remove('hidden');
+        lastIdElem.textContent = `${participant.id} (${participant.smokingGroup || 'Não especificado'})`;
+      }
+
+      enviarParaGoogleSheets({
+        participant,
+        tedaIndifferencePoints,
+        tedaTrialLogs,
+        evaResponses
+      });
+    }
+
+    function renderIndifferenceSummary() {
+      const container = document.getElementById('summaryIndifferenceContainer');
+      if (!container) return;
+
+      container.innerHTML = tedaIndifferencePoints.map(ip => {
+        const isGanho = ip.condicao === 'ganho';
+        const cor = isGanho ? 'text-emerald-600' : 'text-rose-600';
+        return `
+          <div class="neu-raised-sm rounded-xl p-3 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-[10px] uppercase font-bold text-slate-500">
+              <span>${ip.atrasoRotulo}</span>
+              <span class="${cor}">${ip.condicao.toUpperCase()}</span>
+            </div>
+            <div class="mt-1.5">
+              <span class="text-sm font-black font-mono text-slate-800">${formatCurrency(ip.pontoIndiferenca)}</span>
+              <span class="text-[9px] text-slate-400 font-semibold block">Proporção: ${Math.round(ip.proporcao * 100)}%</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function exportDataToExcel() {
+      try {
+        const currentRecord = {
+          participant,
+          tedaIndifferencePoints,
+          tedaTrialLogs,
+          evaResponses,
+          savedAt: new Date().toISOString()
+        };
+
+        const wb = buildSegregatedWorkbook([currentRecord]);
+        const fileName = `Experimento_EVA_TEDA_${participant.id}_${(participant.smokingGroup || 'Nao_Definido').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+        XLSX.writeFile(wb, fileName);
+        showToast('Planilha Excel exportada com sucesso com todos os dados registrados!');
+      } catch (err) {
+        console.error(err);
+        showToast('Erro ao gerar planilha Excel.', true);
+      }
+    }
+
+    function buildConsolidatedGroupRow(rec) {
+      const p = rec.participant;
+      const ips = rec.tedaIndifferencePoints || [];
+      const evas = rec.evaResponses || [];
+      const tedaTrials = rec.tedaTrialLogs || [];
+
+      const calcEvaPorCategoria = (prefixo) => {
+        const filtradas = evas.filter(e => {
+          const nome = (e.nomeArquivo || '').toLowerCase();
+          return nome.startsWith(prefixo);
+        });
+        if (!filtradas.length) return { agradavel: 'N/A', atencao: 'N/A', rt: 'N/A' };
+        const sum1 = filtradas.reduce((acc, c) => acc + (c.eva1_Agradavel_Desagradavel || 0), 0);
+        const sum2 = filtradas.reduce((acc, c) => acc + (c.eva3_Atencao || 0), 0);
+        const sumRt = filtradas.reduce((acc, c) => acc + (c.tempoReacaoMs || 0), 0);
+        return {
+          agradavel: parseFloat((sum1 / filtradas.length).toFixed(1)),
+          atencao: parseFloat((sum2 / filtradas.length).toFixed(1)),
+          rt: Math.round(sumRt / filtradas.length)
+        };
+      };
+
+      const catIsolado = calcEvaPorCategoria('isolado');
+      const catSocial = calcEvaPorCategoria('social');
+      const catNeutra = calcEvaPorCategoria('neutra');
+      const catPositiva = calcEvaPorCategoria('positiva');
+
+      const row = {
+        'ID_Participante': p.id,
+        'Idade': p.age,
+        'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+        'Identidade_Genero': p.gender || p.sociodemographic?.identidadeGenero || '',
+        'Inicio_Experimento': p.startedAt,
+        'Fim_Experimento': p.completedAt,
+
+        // Sociodemográfico
+        'Socio_Data_Nascimento': p.sociodemographic?.dataNascimento || '',
+        'Socio_Etnia': p.sociodemographic?.etnia || '',
+        'Socio_Estado_Civil': p.sociodemographic?.estadoCivil || '',
+        'Socio_Filhos': p.sociodemographic?.filhos || 0,
+        'Socio_Escolaridade': p.sociodemographic?.escolaridade || '',
+        'Socio_Trabalho_Atual': p.sociodemographic?.trabalhandoAtualmente || '',
+        'Socio_Diagnostico_Doenca': p.sociodemographic?.diagnosticoDoenca || '',
+        'Socio_Uso_Alcool': p.sociodemographic?.usoAlcool || '',
+        'Socio_Uso_Outras_Drogas': p.sociodemographic?.usoOutrasDrogas || '',
+        'Socio_Tratamento_Parar_Fumar': p.sociodemographic?.tratamentoServicoSaude || '',
+        'Socio_Medicacao_Parar_Fumar': p.sociodemographic?.medicacaoPararFumar || '',
+        'Socio_Quer_Parar_Fumar': p.sociodemographic?.querPararFumar || '',
+        'Socio_Buscou_Auxilio': p.sociodemographic?.buscouAuxilio || '',
+        'Socio_Quantas_Vezes_Auxilio': p.sociodemographic?.quantasVezesAuxilio || '0',
+
+        // GYTS
+        'GYTS_Q1_Experimentou': p.gyts?.q1_experimentou || '',
+        'GYTS_Q2_Idade_Primeira_Vez': p.gyts?.q2_idade_primeira_vez || '',
+        'GYTS_Q3_Dias_Fumados_30d': p.gyts?.q3_dias_fumados_30d || '',
+        'GYTS_Q4_Qtd_Cigarros_Dia': p.gyts?.q4_quantidade_cigarros_dia || '',
+        'GYTS_Q5_Sabores_Cigarros': p.gyts?.q5_sabores_cigarros || '',
+
+        // Fissura
+        'Fissura_Escore_Total': p.craving ? p.craving.escoreTotal : 'N/A',
+        'Fissura_Media_Itens': p.craving ? p.craving.media : 'N/A',
+
+        // Fagerström
+        'Fagerstrom_Escore_Total': p.fagerstrom ? p.fagerstrom.escoreTotal : 'N/A',
+        'Fagerstrom_Grau_Dependencia': p.fagerstrom ? p.fagerstrom.grauDependencia : 'N/A',
+      };
+
+      for (let i = 1; i <= 12; i++) {
+        row[`Fissura_Item_${i}`] = p.craving ? p.craving[`item_${i}`] : 'N/A';
+      }
+
+      for (let i = 1; i <= 6; i++) {
+        row[`Fagerstrom_Q${i}_Resposta`] = p.fagerstrom ? p.fagerstrom[`q${i}_resposta`] : 'N/A';
+        row[`Fagerstrom_Q${i}_Pontos`] = p.fagerstrom ? p.fagerstrom[`q${i}_pontos`] : 'N/A';
+      }
+
+      // Pontos de Indiferença Ganho
+      TEDA_FULL_DELAYS.forEach(d => {
+        const ipG = ips.find(item => item.condicao === 'ganho' && item.atrasoId === d.id);
+        row[`IP_Ganho_${d.label.replace(/\s+/g, '_')}_(R$)`] = ipG ? ipG.pontoIndiferenca : 'N/A';
+      });
+
+      // Pontos de Indiferença Pagamento
+      TEDA_FULL_DELAYS.forEach(d => {
+        const ipP = ips.find(item => item.condicao === 'perda' && item.atrasoId === d.id);
+        row[`IP_Pagamento_${d.label.replace(/\s+/g, '_')}_(R$)`] = ipP ? ipP.pontoIndiferenca : 'N/A';
+      });
+
+      // Médias Sintetizadas da EVA pelas 4 categorias
+      row['EVA_Cigarro_Contexto_Nao_Social_Agradavel'] = catIsolado.agradavel;
+      row['EVA_Cigarro_Contexto_Nao_Social_Atencao'] = catIsolado.atencao;
+
+      row['EVA_Cigarro_Contexto_Social_Agradavel'] = catSocial.agradavel;
+      row['EVA_Cigarro_Contexto_Social_Atencao'] = catSocial.atencao;
+
+      row['EVA_Imagens_Neutras_Agradavel'] = catNeutra.agradavel;
+      row['EVA_Imagens_Neutras_Atencao'] = catNeutra.atencao;
+
+      row['EVA_Imagens_Positivas_Agradavel'] = catPositiva.agradavel;
+      row['EVA_Imagens_Positivas_Atencao'] = catPositiva.atencao;
+
+      // REGISTRO INDIVIDUAL DE CADA IMAGEM NA LINHA PRINCIPAL
+      evas.forEach(ev => {
+        const cleanName = (ev.nomeArquivo || `img_${ev.ordemApresentacao}`).replace(/\.[^/.]+$/, "");
+        row[`IMG_${cleanName}_Agradavel`] = ev.eva1_Agradavel_Desagradavel;
+        row[`IMG_${cleanName}_Atencao`] = ev.eva3_Atencao;
+      });
+
+      // REGISTRO INDIVIDUAL DE CADA ESCOLHA TEDA NA LINHA PRINCIPAL (Tentativa a Tentativa)
+      tedaTrials.forEach(tr => {
+        const keyPrefix = `TEDA_${tr.condicao.toUpperCase()}_${tr.atrasoId}_T${tr.tentativa}`;
+        row[`${keyPrefix}_Oferecido`] = tr.valorImediatoOferecido;
+        row[`${keyPrefix}_Escolha`] = tr.escolha;
+      });
+
+      return row;
+    }
+
+    function buildSegregatedWorkbook(records) {
+      const wb = XLSX.utils.book_new();
+
+      const diarios = records.filter(r => r.participant.smokingGroup === 'Fumantes diários');
+      const naoDiarios = records.filter(r => r.participant.smokingGroup === 'Fumantes não diários');
+      const naoFumantes = records.filter(r => r.participant.smokingGroup === 'Não fumante' || !r.participant.smokingGroup);
+
+      const rowsDiarios = diarios.map(r => buildConsolidatedGroupRow(r));
+      const rowsNaoDiarios = naoDiarios.map(r => buildConsolidatedGroupRow(r));
+      const rowsNaoFumantes = naoFumantes.map(r => buildConsolidatedGroupRow(r));
+
+      const wsDiarios = rowsDiarios.length ? XLSX.utils.json_to_sheet(rowsDiarios) : XLSX.utils.json_to_sheet([{ Info: 'Nenhum participante registrado neste grupo.' }]);
+      XLSX.utils.book_append_sheet(wb, wsDiarios, 'Fumantes_Diarios');
+
+      const wsNaoDiarios = rowsNaoDiarios.length ? XLSX.utils.json_to_sheet(rowsNaoDiarios) : XLSX.utils.json_to_sheet([{ Info: 'Nenhum participante registrado neste grupo.' }]);
+      XLSX.utils.book_append_sheet(wb, wsNaoDiarios, 'Fumantes_Nao_Diarios');
+
+      const wsNaoFumantes = rowsNaoFumantes.length ? XLSX.utils.json_to_sheet(rowsNaoFumantes) : XLSX.utils.json_to_sheet([{ Info: 'Nenhum participante registrado neste grupo.' }]);
+      XLSX.utils.book_append_sheet(wb, wsNaoFumantes, 'Nao_Fumantes');
+
+      // ABA ANALÍTICA 1: TODAS AS ESCOLHAS TEDA DETALHADAS (Ensaio a Ensaio)
+      const allTedaTrials = [];
+      records.forEach(rec => {
+        (rec.tedaTrialLogs || []).forEach(tr => {
+          allTedaTrials.push({
+            'ID_Participante': rec.participant.id,
+            'Grupo_Tabagismo': rec.participant.smokingGroup || 'Não fumante',
+            'Condicao': tr.condicao === 'ganho' ? 'Ganho (Receber)' : 'Pagamento (Perda)',
+            'Atraso_Rotulo': tr.atrasoRotulo,
+            'Dias_Atraso': tr.diasAtraso,
+            'Tentativa': tr.tentativa,
+            'Valor_Imediato_Oferecido_(R$)': tr.valorImediatoOferecido,
+            'Valor_Atrasado_Fixo_(R$)': tr.valorAtrasadoFixo,
+            'Escolha_Realizada': tr.escolha,
+            'Ajuste_Aplicado_(R$)': tr.ajusteAplicado,
+            'Tempo_Reacao_Ms': tr.tempoReacaoMs,
+            'Data_Hora': tr.timestamp
+          });
+        });
+      });
+      if (allTedaTrials.length) {
+        const wsTedaTrials = XLSX.utils.json_to_sheet(allTedaTrials);
+        XLSX.utils.book_append_sheet(wb, wsTedaTrials, 'TEDA_Todas_Escolhas');
+      }
+
+      // ABA ANALÍTICA 2: TODAS AS AVALIAÇÕES DE IMAGENS EVA DETALHADAS (Imagem a Imagem com Título Original)
+      const allEvaRatings = [];
+      records.forEach(rec => {
+        (rec.evaResponses || []).forEach(ev => {
+          allEvaRatings.push({
+            'ID_Participante': rec.participant.id,
+            'Grupo_Tabagismo': rec.participant.smokingGroup || 'Não fumante',
+            'Ordem_Apresentacao': ev.ordemApresentacao,
+            'Nome_Arquivo_Original': ev.nomeArquivo,
+            'Categoria_Imagem': ev.categoria,
+            'Escore_Agradavel_Desagradavel_(0-100)': ev.eva1_Agradavel_Desagradavel,
+            'Escore_Atencao_(0-100)': ev.eva3_Atencao,
+            'Tempo_Reacao_Ms': ev.tempoReacaoMs,
+            'Data_Hora': ev.timestamp
+          });
+        });
+      });
+      if (allEvaRatings.length) {
+        const wsEvaRatings = XLSX.utils.json_to_sheet(allEvaRatings);
+        XLSX.utils.book_append_sheet(wb, wsEvaRatings, 'EVA_Todas_Imagens');
+      }
+
+      return wb;
+    }
+
+    function saveCurrentParticipantToStorage() {
+      try {
+        const db = getStoredDatabase();
+        const record = {
+          participant,
+          tedaIndifferencePoints,
+          tedaTrialLogs,
+          evaResponses,
+          savedAt: new Date().toISOString()
+        };
+        db.push(record);
+        localStorage.setItem('eva_teda_experiment_db', JSON.stringify(db));
+      } catch (e) {
+        console.warn('Erro ao salvar no LocalStorage:', e);
+      }
+    }
+
+    function getStoredDatabase() {
+      try {
+        const data = localStorage.getItem('eva_teda_experiment_db');
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function renderStoredParticipantsList() {
+      const db = getStoredDatabase();
+      const countElem = document.getElementById('savedParticipantsCount');
+      const listElem = document.getElementById('savedParticipantsList');
+
+      if (countElem) countElem.textContent = `${db.length} registro(s)`;
+      if (!listElem) return;
+
+      if (db.length === 0) {
+        listElem.innerHTML = 'Nenhum participante salvo nesta máquina até o momento.';
+        return;
+      }
+
+      listElem.innerHTML = db.map((rec, i) => `
+        <div class="flex items-center justify-between py-1.5 border-b border-slate-300/60">
+          <span class="font-bold text-slate-700">${i + 1}. ${rec.participant.id} (${rec.participant.age} anos, ${rec.participant.smokingGroup || 'N/A'})</span>
+          <span class="text-[10px] text-slate-400 font-mono">${new Date(rec.savedAt).toLocaleDateString()}</span>
+        </div>
+      `).join('');
+    }
+
+    function exportAccumulatedDatabase() {
+      const db = getStoredDatabase();
+      if (db.length === 0) {
+        showToast('Nenhum dado registrado para exportar.', true);
+        return;
+      }
+
+      try {
+        const wb = buildSegregatedWorkbook(db);
+        XLSX.writeFile(wb, `Banco_Acumulado_Grupos_EVA_TEDA_${new Date().toISOString().slice(0, 10)}.xlsx`);
+        showToast('Banco acumulado exportado com sucesso com todas as abas analíticas!');
+      } catch (e) {
+        console.error(e);
+        showToast('Erro ao exportar banco acumulado.', true);
+      }
+    }
+
+    function getGoogleSheetUrl() {
+      return localStorage.getItem(STORAGE_KEY_GSHEET) || '';
+    }
+
+    function loadSavedGoogleSheetUrl() {
+      const savedUrl = getGoogleSheetUrl();
+      const input = document.getElementById('inputGoogleSheetsUrl');
+      const badge = document.getElementById('sheetConnectionBadge');
+      if (input && savedUrl) {
+        input.value = savedUrl;
+      }
+      if (badge) {
+        if (savedUrl) {
+          badge.textContent = 'Configurado';
+          badge.className = 'text-[11px] font-semibold px-2 py-0.5 rounded-lg neu-inset text-emerald-700 bg-emerald-50';
+        } else {
+          badge.textContent = 'Não configurado';
+          badge.className = 'text-[11px] font-semibold px-2 py-0.5 rounded-lg neu-inset text-slate-500';
+        }
+      }
+    }
+
+    function saveGoogleSheetsWebhook() {
+      const input = document.getElementById('inputGoogleSheetsUrl');
+      const url = input.value.trim();
+      if (!url) {
+        localStorage.removeItem(STORAGE_KEY_GSHEET);
+        loadSavedGoogleSheetUrl();
+        showToast('URL da planilha removida.');
+        return;
+      }
+      localStorage.setItem(STORAGE_KEY_GSHEET, url);
+      loadSavedGoogleSheetUrl();
+      showToast('URL do Google Sheets configurada com sucesso!');
+    }
+
+    async function testGoogleSheetsWebhook() {
+      const url = document.getElementById('inputGoogleSheetsUrl').value.trim();
+      if (!url) {
+        showToast('Por favor, informe a URL do Webhook primeiro.', true);
+        return;
+      }
+
+      showToast('Testando envio de teste para a planilha...');
+      try {
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            group: 'Não fumante',
+            row: {
+              ID_Participante: 'TESTE_CONEXAO',
+              Data_Hora: new Date().toLocaleString('pt-BR'),
+              Status: 'Conexão efetuada com sucesso!'
+            },
+            tedaTrials: [],
+            evaRatings: []
+          })
+        });
+        showToast('Comando de teste disparado! Verifique a sua planilha.');
+      } catch (err) {
+        console.error(err);
+        showToast('Erro ao disparar conexão com o Google Sheets.', true);
+      }
+    }
+
+    async function enviarParaGoogleSheets(currentRecord) {
+      const url = getGoogleSheetUrl();
+      const statusIcon = document.getElementById('cloudSyncIcon');
+      const statusText = document.getElementById('cloudSyncText');
+
+      if (!url) {
+        if (statusIcon && statusText) {
+          statusIcon.className = 'ph ph-cloud-slash text-slate-400 text-base';
+          statusText.textContent = 'Armazenado localmente neste dispositivo.';
+        }
+        return;
+      }
+
+      try {
+        const consolidatedRow = buildConsolidatedGroupRow(currentRecord);
+        const payload = {
+          group: currentRecord.participant.smokingGroup || 'Não fumante',
+          row: consolidatedRow,
+          tedaTrials: (currentRecord.tedaTrialLogs || []).map(tr => ({
+            'ID_Participante': currentRecord.participant.id,
+            'Grupo_Tabagismo': currentRecord.participant.smokingGroup || 'Não fumante',
+            'Condicao': tr.condicao === 'ganho' ? 'Ganho (Receber)' : 'Pagamento (Perda)',
+            'Atraso_Rotulo': tr.atrasoRotulo,
+            'Dias_Atraso': tr.diasAtraso,
+            'Tentativa': tr.tentativa,
+            'Valor_Imediato_Oferecido_(R$)': tr.valorImediatoOferecido,
+            'Valor_Atrasado_Fixo_(R$)': tr.valorAtrasadoFixo,
+            'Escolha_Realizada': tr.escolha,
+            'Ajuste_Aplicado_(R$)': tr.ajusteAplicado,
+            'Tempo_Reacao_Ms': tr.tempoReacaoMs,
+            'Data_Hora': tr.timestamp
+          })),
+          evaRatings: (currentRecord.evaResponses || []).map(ev => ({
+            'ID_Participante': currentRecord.participant.id,
+            'Grupo_Tabagismo': currentRecord.participant.smokingGroup || 'Não fumante',
+            'Ordem_Apresentacao': ev.ordemApresentacao,
+            'Nome_Arquivo_Original': ev.nomeArquivo,
+            'Categoria_Imagem': ev.categoria,
+            'Escore_Agradavel_Desagradavel_(0-100)': ev.eva1_Agradavel_Desagradavel,
+            'Escore_Atencao_(0-100)': ev.eva3_Atencao,
+            'Tempo_Reacao_Ms': ev.tempoReacaoMs,
+            'Data_Hora': ev.timestamp
+          }))
+        };
+
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        if (statusIcon && statusText) {
+          statusIcon.className = 'ph ph-cloud-check text-emerald-600 text-base';
+          statusText.textContent = 'Dados salvos com sucesso na nuvem!';
+          statusText.classList.add('text-emerald-700');
+        }
+      } catch (err) {
+        console.error('Falha ao sincronizar com Google Sheets:', err);
+        if (statusIcon && statusText) {
+          statusIcon.className = 'ph ph-warning-circle text-amber-500 text-base';
+          statusText.textContent = 'Salvo no navegador (backup local protegido).';
+        }
+      }
+    }
+
+    function clearAllStoredData() {
+      localStorage.removeItem('eva_teda_experiment_db');
+      renderStoredParticipantsList();
+      showToast('Banco de dados local limpo.');
+    }
+
+    function formatCurrency(val) {
+      const rounded = Math.round(val);
+      return `R$ ${rounded.toLocaleString('pt-BR')},00`;
+    }
+
+    function openResearcherModal() {
+      document.getElementById('modalResearcher').classList.remove('hidden');
+    }
+
+    function closeResearcherModal() {
+      document.getElementById('modalResearcher').classList.add('hidden');
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toastBox');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.textContent = msg;
+      if (isError) {
+        toastIcon.className = 'ph ph-warning-circle text-rose-500 text-xl';
+      } else {
+        toastIcon.className = 'ph ph-check-circle text-emerald-600 text-xl';
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+
+    function downloadTCLE() {
+      const tcleContent = `USP - UNIVERSIDADE DE SÃO PAULO
+TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO (TCLE)
+
+Você está sendo convidado pelo pesquisador Willer Bruno André Silva, do programa de Pós-graduação Mestrado em Neurociência e Comportamento da Universidade de São Paulo USP a participar desta pesquisa.
+
+O título da pesquisa é: "Avaliação do Comportamento da dependência química: Uma comparação entre fumantes diários e não diários." Informo que, após anuência, o participante da pesquisa receberá uma cópia do Termo de Consentimento Livre e Esclarecido assinado pelo pesquisador.
+
+Informo que o propósito da pesquisa é investigar como as pessoas tomam decisões em relação ao dinheiro, como isso se relaciona com o desejo de fumar e como a reação hedônica a algumas imagens podem influenciar esses comportamentos em fumantes regulares que fumam todos os dias e fumantes que não fumam todos os dias.
+
+Informo que a participação nesta pesquisa envolverá responder a uma série de questões envolvendo dados sociais e demográficos, avaliação da dependência de nicotina (se for fumante), o hábito de fumar (se for fumante), o uso de álcool e outras drogas e uma tarefa que avaliará a forma como são tomadas as decisões relacionadas a dinheiro.
+
+Informo que existe baixo risco ou desconfortos previstos da participação do estudo, por exemplo, dificuldade de interpretação dos formulários. Informo que, a fim de evitar e reduzir efeitos de riscos de recaídas para ex-fumantes, o participante poderá interromper ou pausar a qualquer momento sua participação na pesquisa.
+
+Ressalta-se que, com o objetivo de prevenir e minimizar fatores que possam aumentar o risco de recaída em ex-fumantes, o(a) participante que relatar forte desejo de consumir cigarro poderá, mediante concordância mútua, ser encaminhado(a) à Unidade Básica de Saúde (UBS) mais próxima para acolhimento e manejo psicológico. Nos casos que demandem atendimento imediato, o encaminhamento será realizado ao Centro de Atenção Psicossocial (CAPS), sob responsabilidade do pesquisador responsável.
+
+Informo que um dos possíveis benefícios da participação nesta pesquisa é que responder o questionário pode levar o indivíduo a refletir sobre os seus hábitos de consumo de tabaco. Além disso, a pesquisa ajudará a compreender o mecanismo de ação da tomada de decisão de indivíduos fumantes e ex-fumantes. Informo que os resultados deste estudo poderão ser publicados, mas o nome do participante ou qualquer identificação não será revelado, mantendo-se a confidencialidade dos registros.
+
+Os questionários e tarefas não são ferramentas de diagnóstico do indivíduo, portanto não há estimativa de devolutiva individual. Aqueles que desejam receber o resultado da pesquisa podem entrar em contato por e-mail. Informo que não há remuneração financeira pela participação.
+
+Telefones e endereços eletrônicos de contato:
+Pesquisador responsável: Willer Bruno André Silva.
+Telefone Celular: (34) 9-99818-5348 | E-mail: willerbrunoas@gmail.com / willerbruno@usp.br
+Endereço institucional: Secretaria de Pós-Graduação do Instituto de Psicologia da USP, Av. Prof. Mello Moraes 1721 Sala 13, CEP 05508-030 | Cidade Universitária São Paulo - SP.
+
+Comitê de Ética em Pesquisa do Instituto de Psicologia da USP (CEPH-IPUSP):
+Av. Prof. Mello Moraes, nº 1721, Bloco G, 2º andar, sala 27, CEP 05508-030, Cidade Universitária São Paulo SP.
+E-mail: cep.ip@usp.br | Telefone: (11) 3091-4182.
+
+Documento assinado digitalmente: WILLER BRUNO ANDRE SILVA (gov.br).
+De acordo com a Resolução CNS 466/2012.`;
+
+      const blob = new Blob([tcleContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'TCLE_USP_Pesquisa_Neurociencia_WillerSilva.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
