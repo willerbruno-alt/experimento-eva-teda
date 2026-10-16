@@ -226,7 +226,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
 
-  <!-- CABEÇALHO LIMPO (SEM BOTÃO VISÍVEL PARA O PARTICIPANTE) -->
+  <!-- CABEÇALHO -->
   <header class="w-full px-6 py-4 flex items-center justify-between z-30">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-2xl neu-raised-sm flex items-center justify-center text-blue-600 shadow-sm">
@@ -244,7 +244,6 @@
       <span id="badgeCurrentPhase" class="text-xs px-3.5 py-1.5 rounded-xl neu-inset font-semibold text-slate-600">
         Recepção
       </span>
-      <!-- O botão do pesquisador permanece oculto para voluntários e acessível via Ctrl+Shift+P ou ?admin=true -->
       <button id="btnOpenResearcherModal" type="button" class="hidden text-xs px-3 py-1.5 rounded-xl neu-btn text-slate-500 font-semibold cursor-pointer">
         <i class="ph ph-gear text-sm"></i>
       </button>
@@ -290,7 +289,6 @@
         </button>
       </div>
 
-      <!-- Leitura do TCLE em poço Neumórfico -->
       <div class="neu-inset-deep rounded-2xl p-5 sm:p-7 max-h-80 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed font-sans select-text">
         <div class="text-center pb-2 border-b border-slate-300/70">
           <p class="font-extrabold text-slate-900 uppercase text-sm sm:text-base">USP - Universidade de São Paulo</p>
@@ -363,8 +361,6 @@
 
       <form id="formSociodemographic" class="space-y-6" onsubmit="event.preventDefault(); submitSociodemographic();">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          
-          <!-- Identidade de gênero como 1ª pergunta -->
           <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
             <label class="block text-sm font-bold text-slate-700">Identidade de gênero:</label>
             <select id="socio_identidadeGenero" required class="w-full px-4 py-2.5 rounded-xl neu-inset text-sm text-slate-800 focus:outline-none cursor-pointer">
@@ -501,7 +497,6 @@
 
         <div class="pt-5 border-t border-slate-300/60 space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <!-- Alternativa 'Não sou fumante' incorporada -->
             <div class="neu-raised-sm rounded-2xl p-5 space-y-2">
               <label class="block text-sm font-bold text-slate-700">Está em tratamento para parar de fumar atualmente em algum serviço de saúde?</label>
               <div class="flex flex-wrap gap-4 pt-1">
@@ -613,7 +608,7 @@
           </div>
         </div>
 
-        <!-- Q2: Coluna esquerda inteira, depois direita -->
+        <!-- Q2 -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             2. Quantos anos você tinha quando experimentou fumar um cigarro pela primeira vez (incluindo cigarros industrializados ou feitos a mão)?
@@ -658,7 +653,7 @@
           </div>
         </div>
 
-        <!-- Q3: Coluna esquerda inteira, depois direita -->
+        <!-- Q3 -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             3. Nos últimos 30 dias, em quantos dias você fumou cigarros (incluindo cigarros industrializados ou feitos a mão)?
@@ -699,7 +694,7 @@
           </div>
         </div>
 
-        <!-- Q4: Coluna esquerda inteira, depois direita -->
+        <!-- Q4 -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             4. Pense nos dias em que fumou cigarros (incluindo cigarros industrializados ou feitos a mão) nos últimos 30 dias. Quantos cigarros costumava fumar por dia?
@@ -740,7 +735,7 @@
           </div>
         </div>
 
-        <!-- Q5: Coluna esquerda inteira, depois direita -->
+        <!-- Q5 -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             5. Que sabores de cigarros (incluindo cigarros industrializados ou feitos a mão) você fumou nos últimos 30 dias?
@@ -807,9 +802,7 @@
       </div>
 
       <form id="formCraving" class="space-y-6" onsubmit="event.preventDefault(); submitCraving();">
-        <div id="cravingItemsContainer" class="space-y-5">
-          <!-- 12 itens gerados via JS com escala de 1 a 7 -->
-        </div>
+        <div id="cravingItemsContainer" class="space-y-5"></div>
 
         <div class="pt-4 flex justify-end border-t border-slate-300/60">
           <button type="submit" class="w-full sm:w-auto px-9 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-base">
@@ -964,7 +957,7 @@
       </form>
     </section>
 
-    <!-- ETAPA 1: AVALIAÇÃO DE IMAGENS (EVA) - 2 PERGUNTAS -->
+    <!-- ETAPA 1: AVALIAÇÃO DE IMAGENS (EVA) -->
     <section id="viewPhase1" class="hidden">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
@@ -1052,14 +1045,11 @@
     <!-- ETAPA 2: TEDA (DESVALORIZAÇÃO PELO ATRASO) -->
     <section id="viewPhase2" class="hidden space-y-10">
       
-      <!-- Enunciado com Destaque Cromático: 'receber' em verde, 'pagar' em vermelho -->
       <div class="text-center pt-2">
         <h2 id="tedaPromptQuestion" class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-snug text-slate-800"></h2>
       </div>
 
-      <!-- Alternativas de Escolha da TEDA com botões idênticos -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
-        
         <!-- Opção Imediata -->
         <button id="btnChoiceImmediate" type="button" class="group relative neu-btn rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center gap-3 text-center cursor-pointer min-h-[220px]">
           <span id="tedaImmediateValue" class="text-2xl sm:text-3xl md:text-4xl font-black font-mono text-slate-800 tracking-normal block w-full text-center">
@@ -1070,7 +1060,7 @@
           </span>
         </button>
 
-        <!-- Opção Atrasada (Exatamente o mesmo design de botão) -->
+        <!-- Opção Atrasada -->
         <button id="btnChoiceDelayed" type="button" class="group relative neu-btn rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center gap-3 text-center cursor-pointer min-h-[220px]">
           <span class="text-2xl sm:text-3xl md:text-4xl font-black font-mono text-slate-800 tracking-normal block w-full text-center">
             R$ 1.000,00
@@ -1087,7 +1077,7 @@
       </div>
     </section>
 
-    <!-- TELA DE CONCLUSÃO DO PARTICIPANTE (SEM DADOS PRIVADOS DO PESQUISADOR) -->
+    <!-- TELA DE CONCLUSÃO DO PARTICIPANTE -->
     <section id="viewConclusion" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-14 space-y-8 text-center max-w-2xl mx-auto">
       <div class="w-24 h-24 mx-auto rounded-3xl neu-raised flex items-center justify-center text-emerald-600 text-5xl">
         <i class="ph ph-check-fat"></i>
@@ -1099,7 +1089,6 @@
         </p>
       </div>
 
-      <!-- Indicador de Envio em Nuvem -->
       <div id="cloudSyncStatus" class="flex items-center justify-center gap-2 text-xs font-semibold text-slate-500 py-2">
         <i id="cloudSyncIcon" class="ph ph-circle-notch animate-spin text-blue-600 text-base"></i>
         <span id="cloudSyncText">Salvando respostas na base de dados...</span>
@@ -1183,11 +1172,11 @@
           </span>
         </div>
         <p class="text-xs text-slate-600 leading-relaxed">
-          As fotos podem ser carregadas de duas formas que <strong>nunca se apagam sozinhas</strong>:
+          As fotos podem ser carregadas de duas formas:
         </p>
         <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1.5">
-          <li><strong>Pelo Repositório (Mais recomendado):</strong> Coloque as 120 imagens na pasta <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-slate-800">imagens/</code> no seu GitHub (padrão com 3 dígitos: <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-slate-800">isolado_001.jpg</code>). Todos os voluntários acessarão direto do ar.</li>
-          <li><strong>Pelo Banco Permanente do Navegador (IndexedDB):</strong> Se você for aplicar em computadores locais do laboratório, use o botão abaixo para importar as fotos. O banco IndexedDB <em>não tem limite de 5MB</em> e mantém as fotos salvas para sempre neste computador, mesmo se fechar o navegador.</li>
+          <li><strong>Direto do Repositório (Mais recomendado):</strong> O sistema busca automaticamente em <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-slate-800">imagens/imagens/</code> ou <code class="font-mono bg-slate-200 px-1 py-0.5 rounded text-slate-800">imagens/</code> no seu GitHub.</li>
+          <li><strong>Pelo Banco Permanente do Navegador (IndexedDB):</strong> Se aplicar em computadores locais sem internet estável, use o botão abaixo para importar as fotos uma única vez.</li>
         </ol>
         <div class="flex flex-wrap gap-3">
           <label class="px-4 py-2.5 rounded-xl neu-btn text-slate-700 text-xs font-bold cursor-pointer flex items-center gap-2">
@@ -1311,7 +1300,7 @@
     const DB_VERSION = 1;
     const STORE_NAME = 'stimuli_images';
 
-    /* --- GESTOR DE BANCO INDEXEDDB PERMANENTE (SEM LIMITE DE 5MB) --- */
+    /* --- GESTOR DE BANCO INDEXEDDB PERMANENTE --- */
     function openImageDB() {
       return new Promise((resolve, reject) => {
         if (!window.indexedDB) {
@@ -1353,7 +1342,6 @@
           request.onerror = () => reject(request.error);
         });
       } catch (e) {
-        console.warn("IndexedDB indisponível, usando fallback:", e);
         return [];
       }
     }
@@ -1401,7 +1389,6 @@
 
       document.getElementById('btnCloseResearcherModal').addEventListener('click', closeResearcherModal);
 
-      // Sliders táteis da EVA com cálculo contínuo de gradiente
       const s1 = document.getElementById('evaSlider1');
       const s2 = document.getElementById('evaSlider2');
       const btnConfirm = document.getElementById('btnConfirmEva');
@@ -1417,7 +1404,6 @@
 
       btnConfirm.addEventListener('click', confirmEvaResponse);
 
-      // Botões de Escolha da TEDA
       document.getElementById('btnChoiceImmediate').addEventListener('click', () => {
         if (!isTedaTransitioning) registrarEscolha('imediato');
       });
@@ -1436,7 +1422,7 @@
     }
 
     async function inicializarBancoImagens() {
-      // 1. Tenta carregar do IndexedDB persistente
+      // 1. Tenta carregar do IndexedDB persistente se o pesquisador tiver importado
       const stored = await loadImagesFromIndexedDB();
       if (stored && stored.length > 0) {
         stimuliList = stored;
@@ -1445,9 +1431,9 @@
         return;
       }
 
-      // 2. Fallback: carrega referências da pasta imagens/
+      // 2. Carrega referências com busca em cascata (imagens/imagens/ e imagens/)
       stimuliList = criarListaImagensPadrao(isDemoMode);
-      setStorageBadge(false, 'Pasta imagens/ (Padrão)');
+      setStorageBadge(false, 'Repositório GitHub');
     }
 
     function setStorageBadge(isPersistent, text) {
@@ -1474,18 +1460,27 @@
 
       prefixes.forEach(p => {
         for (let i = 1; i <= qtd; i++) {
-          // Padrão primário: 3 dígitos (ex: isolado_004.jpg)
           const num3 = String(i).padStart(3, '0');
-          // Suporte alternativo: 2 dígitos (ex: isolado_04.jpg)
           const num2 = String(i).padStart(2, '0');
           
+          // Candidatos de URL em ordem prioritária de resolução
+          const candidateUrls = [
+            `imagens/imagens/${p.prefix}_${num3}.jpg`,
+            `imagens/${p.prefix}_${num3}.jpg`,
+            `imagens/imagens/${p.prefix}_${num3}.jpeg`,
+            `imagens/${p.prefix}_${num3}.jpeg`,
+            `imagens/imagens/${p.prefix}_${num3}.png`,
+            `imagens/${p.prefix}_${num3}.png`,
+            `imagens/imagens/${p.prefix}_${num2}.jpg`,
+            `imagens/${p.prefix}_${num2}.jpg`
+          ];
+
           list.push({
             id: `${p.prefix}_${num3}`,
             name: `${p.prefix}_${num3}.jpg`,
-            altName: `${p.prefix}_${num2}.jpg`,
             category: p.category,
-            src: `imagens/${p.prefix}_${num3}.jpg`,
-            altSrc: `imagens/${p.prefix}_${num2}.jpg`
+            candidates: candidateUrls,
+            src: candidateUrls[0]
           });
         }
       });
@@ -1503,21 +1498,20 @@
 
     function generateSvgPlaceholder(name, category) {
       let colorA = '#94a3b8';
-      let colorB = '#64748b';
-      if (name.startsWith('isolado')) { colorA = '#fed7aa'; colorB = '#ea580c'; }
-      else if (name.startsWith('social')) { colorA = '#fecdd3'; colorB = '#e11d48'; }
-      else if (name.startsWith('neutra')) { colorA = '#cbd5e1'; colorB = '#475569'; }
-      else if (name.startsWith('positiva')) { colorA = '#bbf7d0'; colorB = '#16a34a'; }
+      if (name.startsWith('isolado')) { colorA = '#fed7aa'; }
+      else if (name.startsWith('social')) { colorA = '#fecdd3'; }
+      else if (name.startsWith('neutra')) { colorA = '#cbd5e1'; }
+      else if (name.startsWith('positiva')) { colorA = '#bbf7d0'; }
 
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
           <rect width="800" height="600" fill="#e2e8f1"/>
           <rect x="50" y="50" width="700" height="500" rx="30" fill="${colorA}"/>
-          <text x="50%" y="46%" font-family="system-ui, sans-serif" font-weight="800" font-size="34" fill="#ffffff" text-anchor="middle">
+          <text x="50%" y="46%" font-family="system-ui, sans-serif" font-weight="800" font-size="34" fill="#1e293b" text-anchor="middle">
             ${category}
           </text>
-          <text x="50%" y="54%" font-family="monospace" font-size="22" font-weight="700" fill="#ffffff" opacity="0.9" text-anchor="middle">
-            imagens/${name}
+          <text x="50%" y="54%" font-family="monospace" font-size="22" font-weight="700" fill="#475569" text-anchor="middle">
+            ${name}
           </text>
         </svg>
       `;
@@ -1540,6 +1534,7 @@
             id: file.name.replace(/\.[^/.]+$/, "") || `IMG_${idx + 1}`,
             name: file.name,
             category: category,
+            candidates: [e.target.result],
             src: e.target.result
           });
 
@@ -1552,7 +1547,7 @@
 
               setStorageBadge(true, `IndexedDB (${stimuliList.length} salvas)`);
               updateStimuliStatusBadge();
-              showToast(`${files.length} imagens gravadas no banco permanente com sucesso! Não sumirão mais.`);
+              showToast(`${files.length} imagens gravadas no banco permanente com sucesso!`);
             } catch (err) {
               console.error("Erro ao gravar no IndexedDB:", err);
               showToast("Falha ao salvar no banco permanente do navegador.", true);
@@ -1566,9 +1561,9 @@
     async function clearCachedStimuli() {
       await clearImagesFromIndexedDB();
       stimuliList = criarListaImagensPadrao(isDemoMode);
-      setStorageBadge(false, 'Pasta imagens/ (Padrão)');
+      setStorageBadge(false, 'Repositório GitHub');
       updateStimuliStatusBadge();
-      showToast('Banco de imagens limpo. Restaurada leitura pela pasta imagens/.');
+      showToast('Banco de imagens limpo. Restaurada leitura pelo repositório GitHub.');
     }
 
     function toggleDemoMode(checked) {
@@ -1871,12 +1866,17 @@
       const imgElem = document.getElementById('currentStimulusImg');
       const evaOverlay = document.getElementById('evaWhiteOverlay');
 
-      // Tenta fallback com nome alternativo de 2 dígitos antes do placeholder SVG
-      let tryAlt = true;
+      // Sistema robusto de resolução de URL em cascata
+      const candidateList = Array.isArray(stim.candidates) && stim.candidates.length > 0 
+        ? [...stim.candidates] 
+        : [stim.src];
+      
+      let candidateIndex = 0;
+
       imgElem.onerror = () => {
-        if (tryAlt && stim.altSrc) {
-          tryAlt = false;
-          imgElem.src = stim.altSrc;
+        candidateIndex++;
+        if (candidateIndex < candidateList.length) {
+          imgElem.src = candidateList[candidateIndex];
         } else {
           imgElem.onerror = null;
           imgElem.src = generateSvgPlaceholder(stim.name, stim.category);
@@ -1888,7 +1888,7 @@
         evaOverlay.classList.add('active');
 
         setTimeout(() => {
-          imgElem.src = stim.src;
+          imgElem.src = candidateList[0];
           resetEvaSliders();
           evaOverlay.classList.remove('active');
 
@@ -1898,7 +1898,7 @@
           }, 250);
         }, 250);
       } else {
-        imgElem.src = stim.src;
+        imgElem.src = candidateList[0];
         resetEvaSliders();
         currentImageStartTime = performance.now();
       }
@@ -2126,7 +2126,7 @@
         const wb = buildSegregatedWorkbook([currentRecord]);
         const fileName = `Experimento_EVA_TEDA_${participant.id}_${(participant.smokingGroup || 'Nao_Definido').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
         XLSX.writeFile(wb, fileName);
-        showToast('Planilha Excel exportada com sucesso com todos os dados registrados!');
+        showToast('Planilha Excel exportada com sucesso!');
       } catch (err) {
         console.error(err);
         showToast('Erro ao gerar planilha Excel.', true);
@@ -2168,7 +2168,6 @@
         'Inicio_Experimento': p.startedAt,
         'Fim_Experimento': p.completedAt,
 
-        // Sociodemográfico
         'Socio_Data_Nascimento': p.sociodemographic?.dataNascimento || '',
         'Socio_Etnia': p.sociodemographic?.etnia || '',
         'Socio_Estado_Civil': p.sociodemographic?.estadoCivil || '',
@@ -2184,18 +2183,15 @@
         'Socio_Buscou_Auxilio': p.sociodemographic?.buscouAuxilio || '',
         'Socio_Quantas_Vezes_Auxilio': p.sociodemographic?.quantasVezesAuxilio || '0',
 
-        // GYTS
         'GYTS_Q1_Experimentou': p.gyts?.q1_experimentou || '',
         'GYTS_Q2_Idade_Primeira_Vez': p.gyts?.q2_idade_primeira_vez || '',
         'GYTS_Q3_Dias_Fumados_30d': p.gyts?.q3_dias_fumados_30d || '',
         'GYTS_Q4_Qtd_Cigarros_Dia': p.gyts?.q4_quantidade_cigarros_dia || '',
         'GYTS_Q5_Sabores_Cigarros': p.gyts?.q5_sabores_cigarros || '',
 
-        // Fissura
         'Fissura_Escore_Total': p.craving ? p.craving.escoreTotal : 'N/A',
         'Fissura_Media_Itens': p.craving ? p.craving.media : 'N/A',
 
-        // Fagerström
         'Fagerstrom_Escore_Total': p.fagerstrom ? p.fagerstrom.escoreTotal : 'N/A',
         'Fagerstrom_Grau_Dependencia': p.fagerstrom ? p.fagerstrom.grauDependencia : 'N/A',
       };
@@ -2209,19 +2205,16 @@
         row[`Fagerstrom_Q${i}_Pontos`] = p.fagerstrom ? p.fagerstrom[`q${i}_pontos`] : 'N/A';
       }
 
-      // Pontos de Indiferença Ganho
       TEDA_FULL_DELAYS.forEach(d => {
         const ipG = ips.find(item => item.condicao === 'ganho' && item.atrasoId === d.id);
         row[`IP_Ganho_${d.label.replace(/\s+/g, '_')}_(R$)`] = ipG ? ipG.pontoIndiferenca : 'N/A';
       });
 
-      // Pontos de Indiferença Pagamento
       TEDA_FULL_DELAYS.forEach(d => {
         const ipP = ips.find(item => item.condicao === 'perda' && item.atrasoId === d.id);
         row[`IP_Pagamento_${d.label.replace(/\s+/g, '_')}_(R$)`] = ipP ? ipP.pontoIndiferenca : 'N/A';
       });
 
-      // Médias Sintetizadas da EVA pelas 4 categorias
       row['EVA_Cigarro_Contexto_Nao_Social_Agradavel'] = catIsolado.agradavel;
       row['EVA_Cigarro_Contexto_Nao_Social_Atencao'] = catIsolado.atencao;
 
@@ -2234,14 +2227,12 @@
       row['EVA_Imagens_Positivas_Agradavel'] = catPositiva.agradavel;
       row['EVA_Imagens_Positivas_Atencao'] = catPositiva.atencao;
 
-      // REGISTRO INDIVIDUAL DE CADA IMAGEM NA LINHA PRINCIPAL
       evas.forEach(ev => {
         const cleanName = (ev.nomeArquivo || `img_${ev.ordemApresentacao}`).replace(/\.[^/.]+$/, "");
         row[`IMG_${cleanName}_Agradavel`] = ev.eva1_Agradavel_Desagradavel;
         row[`IMG_${cleanName}_Atencao`] = ev.eva3_Atencao;
       });
 
-      // REGISTRO INDIVIDUAL DE CADA ESCOLHA TEDA NA LINHA PRINCIPAL (Tentativa a Tentativa)
       tedaTrials.forEach(tr => {
         const keyPrefix = `TEDA_${tr.condicao.toUpperCase()}_${tr.atrasoId}_T${tr.tentativa}`;
         row[`${keyPrefix}_Oferecido`] = tr.valorImediatoOferecido;
@@ -2271,7 +2262,6 @@
       const wsNaoFumantes = rowsNaoFumantes.length ? XLSX.utils.json_to_sheet(rowsNaoFumantes) : XLSX.utils.json_to_sheet([{ Info: 'Nenhum participante registrado neste grupo.' }]);
       XLSX.utils.book_append_sheet(wb, wsNaoFumantes, 'Nao_Fumantes');
 
-      // ABA ANALÍTICA 1: TODAS AS ESCOLHAS TEDA DETALHADAS (Ensaio a Ensaio)
       const allTedaTrials = [];
       records.forEach(rec => {
         (rec.tedaTrialLogs || []).forEach(tr => {
@@ -2296,7 +2286,6 @@
         XLSX.utils.book_append_sheet(wb, wsTedaTrials, 'TEDA_Todas_Escolhas');
       }
 
-      // ABA ANALÍTICA 2: TODAS AS AVALIAÇÕES DE IMAGENS EVA DETALHADAS (Imagem a Imagem com Título Original)
       const allEvaRatings = [];
       records.forEach(rec => {
         (rec.evaResponses || []).forEach(ev => {
