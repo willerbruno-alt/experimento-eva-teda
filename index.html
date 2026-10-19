@@ -1113,7 +1113,7 @@
           </div>
           <div>
             <h3 class="text-xl font-bold text-slate-800">Painel de Controle do Pesquisador</h3>
-            <span class="text-xs text-slate-500 font-medium">Registro completo: todas as escolhas TEDA e avaliações EVA</span>
+            <span class="text-xs text-slate-500 font-medium">Exportação em abas temáticas por instrumento com classificação de grupos</span>
           </div>
         </div>
         <button id="btnCloseResearcherModal" type="button" class="w-9 h-9 rounded-xl neu-btn flex items-center justify-center text-slate-600 hover:text-slate-900 cursor-pointer">
@@ -1131,7 +1131,7 @@
         <div class="pt-2 flex justify-end">
           <button type="button" onclick="exportDataToExcel();" class="px-5 py-2.5 rounded-xl neu-btn-primary text-xs font-bold flex items-center gap-2 cursor-pointer">
             <i class="ph ph-file-xls text-base"></i>
-            <span>Baixar Planilha Individual Completa (.xlsx)</span>
+            <span>Baixar Planilha Individual em 6 Abas (.xlsx)</span>
           </button>
         </div>
       </div>
@@ -1148,7 +1148,7 @@
           </span>
         </div>
         <p class="text-xs text-slate-600 leading-relaxed">
-          Cole abaixo a URL do Web App gerada no Google Apps Script para receber os dados dos participantes em tempo real:
+          Cole abaixo a URL do Web App gerada no Google Apps Script para receber os dados dos participantes em abas temáticas em tempo real:
         </p>
         <div class="space-y-2">
           <input type="url" id="inputGoogleSheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl neu-inset font-mono text-xs text-slate-800 focus:outline-none">
@@ -1212,7 +1212,7 @@
         <div class="flex gap-3">
           <button type="button" onclick="exportAccumulatedDatabase();" class="px-4 py-2.5 rounded-xl neu-btn-primary text-xs font-bold flex items-center gap-1.5 cursor-pointer">
             <i class="ph ph-database"></i>
-            <span>Exportar Banco Acumulado (.xlsx)</span>
+            <span>Exportar Banco Acumulado em 6 Abas (.xlsx)</span>
           </button>
           <button type="button" onclick="clearAllStoredData();" class="px-4 py-2.5 rounded-xl neu-btn text-rose-600 text-xs font-bold cursor-pointer">
             Limpar Banco Local
@@ -1295,6 +1295,8 @@
     let tedaTrialLogs = [];
     let tedaIndifferencePoints = [];
 
+    // URL oficial do Google Apps Script já vinculada de fábrica
+    const DEFAULT_GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-3dfp2pmgBN9jsP3-wyWs3waXp3i0X139-gUA3L5zvzvYW4mvdKOFsphDC4SGMyW-sg/exec';
     const STORAGE_KEY_GSHEET = 'eva_teda_google_sheet_url';
     const DB_NAME = 'EVATEDA_StimuliDB';
     const DB_VERSION = 1;
@@ -1866,7 +1868,6 @@
       const imgElem = document.getElementById('currentStimulusImg');
       const evaOverlay = document.getElementById('evaWhiteOverlay');
 
-      // Sistema robusto de resolução de URL em cascata
       const candidateList = Array.isArray(stim.candidates) && stim.candidates.length > 0 
         ? [...stim.candidates] 
         : [stim.src];
@@ -2113,6 +2114,159 @@
       }).join('');
     }
 
+    /* --- GERAÇÃO MODULAR DE PLANILHAS (ABAS TEMÁTICAS) --- */
+    function buildThematicWorkbook(records) {
+      const wb = XLSX.utils.book_new();
+
+      // 1. Aba Sociodemográfico
+      const rowsSocio = records.map(rec => {
+        const p = rec.participant;
+        const s = p.sociodemographic || {};
+        return {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Identidade_Genero': p.gender || s.identidadeGenero || '',
+          'Data_Nascimento': s.dataNascimento || '',
+          'Etnia': s.etnia || '',
+          'Estado_Civil': s.estadoCivil || '',
+          'Filhos_Quantidade': s.filhos !== undefined ? s.filhos : 0,
+          'Escolaridade_Maxima': s.escolaridade || '',
+          'Trabalhando_Atualmente': s.trabalhandoAtualmente || '',
+          'Diagnostico_Medico_Doenca': s.diagnosticoDoenca || '',
+          'Uso_Alcool': s.usoAlcool || '',
+          'Uso_Outras_Drogas': s.usoOutrasDrogas || '',
+          'Tratamento_Parar_Fumar_Servico_Saude': s.tratamentoServicoSaude || '',
+          'Medicacao_Parar_Fumar': s.medicacaoPararFumar || '',
+          'Quer_Parar_Fumar': s.querPararFumar || '',
+          'Ja_Buscou_Auxilio': s.buscouAuxilio || '',
+          'Quantas_Vezes_Buscou_Auxilio': s.quantasVezesAuxilio || '0',
+          'Data_Inicio': p.startedAt,
+          'Data_Conclusao': p.completedAt
+        };
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsSocio.length ? rowsSocio : [{ Info: 'Sem registros' }]), 'Sociodemografico');
+
+      // 2. Aba GYTS (Tabagismo)
+      const rowsGyts = records.map(rec => {
+        const p = rec.participant;
+        const g = p.gyts || {};
+        return {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'GYTS_Q1_Experimentou_Fumar': g.q1_experimentou || '',
+          'GYTS_Q2_Idade_Primeira_Vez': g.q2_idade_primeira_vez || '',
+          'GYTS_Q3_Dias_Fumados_Ultimos_30d': g.q3_dias_fumados_30d || '',
+          'GYTS_Q4_Quantidade_Cigarros_Por_Dia': g.q4_quantidade_cigarros_dia || '',
+          'GYTS_Q5_Sabores_Cigarros_Ultimos_30d': g.q5_sabores_cigarros || '',
+          'Data_Registro': p.completedAt || p.startedAt
+        };
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsGyts.length ? rowsGyts : [{ Info: 'Sem registros' }]), 'GYTS_Tabagismo');
+
+      // 3. Aba Fissura (QSU-Brief)
+      const rowsCraving = records.map(rec => {
+        const p = rec.participant;
+        const c = p.craving || null;
+        const row = {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Status_Questionario': c ? 'Respondido' : 'Não Aplicável (Não Fumante)',
+          'Escore_Total_Fissura': c ? c.escoreTotal : 'N/A',
+          'Media_Itens_Fissura': c ? c.media : 'N/A'
+        };
+        for (let i = 1; i <= 12; i++) {
+          row[`Item_${i}`] = c ? c[`item_${i}`] : 'N/A';
+        }
+        row['Data_Resposta'] = c ? c.respondidoEm : 'N/A';
+        return row;
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsCraving.length ? rowsCraving : [{ Info: 'Sem registros' }]), 'Fissura_QSU_Brief');
+
+      // 4. Aba Dependência de Fagerström
+      const rowsFager = records.map(rec => {
+        const p = rec.participant;
+        const f = p.fagerstrom || null;
+        return {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Status_Questionario': f ? 'Respondido' : 'Não Aplicável (Não Fumante)',
+          'Pontuacao_Final_Total': f ? f.escoreTotal : 'N/A',
+          'Grau_Dependencia_Conclusao': f ? f.grauDependencia : 'N/A',
+          'Q1_Tempo_Apos_Acordar': f ? f.q1_resposta : 'N/A',
+          'Q1_Pontos': f ? f.q1_pontos : 'N/A',
+          'Q2_Dificil_Nao_Fumar_Locais_Proibidos': f ? f.q2_resposta : 'N/A',
+          'Q2_Pontos': f ? f.q2_pontos : 'N/A',
+          'Q3_Cigarro_Mais_Satisfacao': f ? f.q3_resposta : 'N/A',
+          'Q3_Pontos': f ? f.q3_pontos : 'N/A',
+          'Q4_Quantidade_Cigarros_Por_Dia': f ? f.q4_resposta : 'N/A',
+          'Q4_Pontos': f ? f.q4_pontos : 'N/A',
+          'Q5_Fuma_Mais_Frequentemente_Manha': f ? f.q5_resposta : 'N/A',
+          'Q5_Pontos': f ? f.q5_pontos : 'N/A',
+          'Q6_Fuma_Doente_De_Cama': f ? f.q6_resposta : 'N/A',
+          'Q6_Pontos': f ? f.q6_pontos : 'N/A',
+          'Data_Resposta': f ? f.respondidoEm : 'N/A'
+        };
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsFager.length ? rowsFager : [{ Info: 'Sem registros' }]), 'Dependencia_Fagerstrom');
+
+      // 5. Aba Avaliação das Imagens (EVA)
+      const rowsEva = [];
+      records.forEach(rec => {
+        const p = rec.participant;
+        (rec.evaResponses || []).forEach(ev => {
+          rowsEva.push({
+            'ID_Participante': p.id,
+            'Idade': p.age,
+            'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+            'Ordem_Apresentacao': ev.ordemApresentacao,
+            'Identificacao_Imagem_ID': ev.idImagem,
+            'Nome_Arquivo_Original': ev.nomeArquivo,
+            'Categoria_Imagem': ev.categoria,
+            'Agradavel_Desagradavel_(0-100)': ev.eva1_Agradavel_Desagradavel,
+            'Atencao_(0-100)': ev.eva3_Atencao,
+            'Tempo_Reacao_Ms': ev.tempoReacaoMs,
+            'Data_Hora': ev.timestamp
+          });
+        });
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsEva.length ? rowsEva : [{ Info: 'Sem registros' }]), 'Avaliacao_Imagens_EVA');
+
+      // 6. Aba Desvalorização pelo Atraso (TEDA)
+      const rowsTeda = [];
+      records.forEach(rec => {
+        const p = rec.participant;
+        const ips = rec.tedaIndifferencePoints || [];
+
+        (rec.tedaTrialLogs || []).forEach(tr => {
+          const matchingIp = ips.find(item => item.condicao === tr.condicao && item.atrasoId === tr.atrasoId);
+          rowsTeda.push({
+            'ID_Participante': p.id,
+            'Idade': p.age,
+            'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+            'Condicao': tr.condicao === 'ganho' ? 'Ganho (Receber)' : 'Pagamento (Perda)',
+            'Atraso_Rotulo': tr.atrasoRotulo,
+            'Dias_Atraso': tr.diasAtraso,
+            'Tentativa': tr.tentativa,
+            'Valor_Imediato_Oferecido_(R$)': tr.valorImediatoOferecido,
+            'Valor_Atrasado_Fixo_(R$)': tr.valorAtrasadoFixo,
+            'Escolha_Participante': tr.escolha,
+            'Ajuste_Aplicado_(R$)': tr.ajusteAplicado,
+            'Ponto_Indiferenca_Final_Atraso_(R$)': matchingIp ? matchingIp.pontoIndiferenca : 'Em andamento',
+            'Proporcao_Ponto_Indiferenca': matchingIp ? matchingIp.proporcao : 'N/A',
+            'Tempo_Reacao_Ms': tr.tempoReacaoMs,
+            'Data_Hora': tr.timestamp
+          });
+        });
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsTeda.length ? rowsTeda : [{ Info: 'Sem registros' }]), 'Desvalorizacao_Atraso_TEDA');
+
+      return wb;
+    }
+
     function exportDataToExcel() {
       try {
         const currentRecord = {
@@ -2123,191 +2277,14 @@
           savedAt: new Date().toISOString()
         };
 
-        const wb = buildSegregatedWorkbook([currentRecord]);
-        const fileName = `Experimento_EVA_TEDA_${participant.id}_${(participant.smokingGroup || 'Nao_Definido').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+        const wb = buildThematicWorkbook([currentRecord]);
+        const fileName = `Pesquisa_EVA_TEDA_${participant.id}_${(participant.smokingGroup || 'Nao_Definido').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
         XLSX.writeFile(wb, fileName);
-        showToast('Planilha Excel exportada com sucesso!');
+        showToast('Planilha Excel organizada em 6 abas exportada com sucesso!');
       } catch (err) {
         console.error(err);
         showToast('Erro ao gerar planilha Excel.', true);
       }
-    }
-
-    function buildConsolidatedGroupRow(rec) {
-      const p = rec.participant;
-      const ips = rec.tedaIndifferencePoints || [];
-      const evas = rec.evaResponses || [];
-      const tedaTrials = rec.tedaTrialLogs || [];
-
-      const calcEvaPorCategoria = (prefixo) => {
-        const filtradas = evas.filter(e => {
-          const nome = (e.nomeArquivo || '').toLowerCase();
-          return nome.startsWith(prefixo);
-        });
-        if (!filtradas.length) return { agradavel: 'N/A', atencao: 'N/A', rt: 'N/A' };
-        const sum1 = filtradas.reduce((acc, c) => acc + (c.eva1_Agradavel_Desagradavel || 0), 0);
-        const sum2 = filtradas.reduce((acc, c) => acc + (c.eva3_Atencao || 0), 0);
-        const sumRt = filtradas.reduce((acc, c) => acc + (c.tempoReacaoMs || 0), 0);
-        return {
-          agradavel: parseFloat((sum1 / filtradas.length).toFixed(1)),
-          atencao: parseFloat((sum2 / filtradas.length).toFixed(1)),
-          rt: Math.round(sumRt / filtradas.length)
-        };
-      };
-
-      const catIsolado = calcEvaPorCategoria('isolado');
-      const catSocial = calcEvaPorCategoria('social');
-      const catNeutra = calcEvaPorCategoria('neutra');
-      const catPositiva = calcEvaPorCategoria('positiva');
-
-      const row = {
-        'ID_Participante': p.id,
-        'Idade': p.age,
-        'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
-        'Identidade_Genero': p.gender || p.sociodemographic?.identidadeGenero || '',
-        'Inicio_Experimento': p.startedAt,
-        'Fim_Experimento': p.completedAt,
-
-        'Socio_Data_Nascimento': p.sociodemographic?.dataNascimento || '',
-        'Socio_Etnia': p.sociodemographic?.etnia || '',
-        'Socio_Estado_Civil': p.sociodemographic?.estadoCivil || '',
-        'Socio_Filhos': p.sociodemographic?.filhos || 0,
-        'Socio_Escolaridade': p.sociodemographic?.escolaridade || '',
-        'Socio_Trabalho_Atual': p.sociodemographic?.trabalhandoAtualmente || '',
-        'Socio_Diagnostico_Doenca': p.sociodemographic?.diagnosticoDoenca || '',
-        'Socio_Uso_Alcool': p.sociodemographic?.usoAlcool || '',
-        'Socio_Uso_Outras_Drogas': p.sociodemographic?.usoOutrasDrogas || '',
-        'Socio_Tratamento_Parar_Fumar': p.sociodemographic?.tratamentoServicoSaude || '',
-        'Socio_Medicacao_Parar_Fumar': p.sociodemographic?.medicacaoPararFumar || '',
-        'Socio_Quer_Parar_Fumar': p.sociodemographic?.querPararFumar || '',
-        'Socio_Buscou_Auxilio': p.sociodemographic?.buscouAuxilio || '',
-        'Socio_Quantas_Vezes_Auxilio': p.sociodemographic?.quantasVezesAuxilio || '0',
-
-        'GYTS_Q1_Experimentou': p.gyts?.q1_experimentou || '',
-        'GYTS_Q2_Idade_Primeira_Vez': p.gyts?.q2_idade_primeira_vez || '',
-        'GYTS_Q3_Dias_Fumados_30d': p.gyts?.q3_dias_fumados_30d || '',
-        'GYTS_Q4_Qtd_Cigarros_Dia': p.gyts?.q4_quantidade_cigarros_dia || '',
-        'GYTS_Q5_Sabores_Cigarros': p.gyts?.q5_sabores_cigarros || '',
-
-        'Fissura_Escore_Total': p.craving ? p.craving.escoreTotal : 'N/A',
-        'Fissura_Media_Itens': p.craving ? p.craving.media : 'N/A',
-
-        'Fagerstrom_Escore_Total': p.fagerstrom ? p.fagerstrom.escoreTotal : 'N/A',
-        'Fagerstrom_Grau_Dependencia': p.fagerstrom ? p.fagerstrom.grauDependencia : 'N/A',
-      };
-
-      for (let i = 1; i <= 12; i++) {
-        row[`Fissura_Item_${i}`] = p.craving ? p.craving[`item_${i}`] : 'N/A';
-      }
-
-      for (let i = 1; i <= 6; i++) {
-        row[`Fagerstrom_Q${i}_Resposta`] = p.fagerstrom ? p.fagerstrom[`q${i}_resposta`] : 'N/A';
-        row[`Fagerstrom_Q${i}_Pontos`] = p.fagerstrom ? p.fagerstrom[`q${i}_pontos`] : 'N/A';
-      }
-
-      TEDA_FULL_DELAYS.forEach(d => {
-        const ipG = ips.find(item => item.condicao === 'ganho' && item.atrasoId === d.id);
-        row[`IP_Ganho_${d.label.replace(/\s+/g, '_')}_(R$)`] = ipG ? ipG.pontoIndiferenca : 'N/A';
-      });
-
-      TEDA_FULL_DELAYS.forEach(d => {
-        const ipP = ips.find(item => item.condicao === 'perda' && item.atrasoId === d.id);
-        row[`IP_Pagamento_${d.label.replace(/\s+/g, '_')}_(R$)`] = ipP ? ipP.pontoIndiferenca : 'N/A';
-      });
-
-      row['EVA_Cigarro_Contexto_Nao_Social_Agradavel'] = catIsolado.agradavel;
-      row['EVA_Cigarro_Contexto_Nao_Social_Atencao'] = catIsolado.atencao;
-
-      row['EVA_Cigarro_Contexto_Social_Agradavel'] = catSocial.agradavel;
-      row['EVA_Cigarro_Contexto_Social_Atencao'] = catSocial.atencao;
-
-      row['EVA_Imagens_Neutras_Agradavel'] = catNeutra.agradavel;
-      row['EVA_Imagens_Neutras_Atencao'] = catNeutra.atencao;
-
-      row['EVA_Imagens_Positivas_Agradavel'] = catPositiva.agradavel;
-      row['EVA_Imagens_Positivas_Atencao'] = catPositiva.atencao;
-
-      evas.forEach(ev => {
-        const cleanName = (ev.nomeArquivo || `img_${ev.ordemApresentacao}`).replace(/\.[^/.]+$/, "");
-        row[`IMG_${cleanName}_Agradavel`] = ev.eva1_Agradavel_Desagradavel;
-        row[`IMG_${cleanName}_Atencao`] = ev.eva3_Atencao;
-      });
-
-      tedaTrials.forEach(tr => {
-        const keyPrefix = `TEDA_${tr.condicao.toUpperCase()}_${tr.atrasoId}_T${tr.tentativa}`;
-        row[`${keyPrefix}_Oferecido`] = tr.valorImediatoOferecido;
-        row[`${keyPrefix}_Escolha`] = tr.escolha;
-      });
-
-      return row;
-    }
-
-    function buildSegregatedWorkbook(records) {
-      const wb = XLSX.utils.book_new();
-
-      const diarios = records.filter(r => r.participant.smokingGroup === 'Fumantes diários');
-      const naoDiarios = records.filter(r => r.participant.smokingGroup === 'Fumantes não diários');
-      const naoFumantes = records.filter(r => r.participant.smokingGroup === 'Não fumante' || !r.participant.smokingGroup);
-
-      const rowsDiarios = diarios.map(r => buildConsolidatedGroupRow(r));
-      const rowsNaoDiarios = naoDiarios.map(r => buildConsolidatedGroupRow(r));
-      const rowsNaoFumantes = naoFumantes.map(r => buildConsolidatedGroupRow(r));
-
-      const wsDiarios = rowsDiarios.length ? XLSX.utils.json_to_sheet(rowsDiarios) : XLSX.utils.json_to_sheet([{ Info: 'Nenhum participante registrado neste grupo.' }]);
-      XLSX.utils.book_append_sheet(wb, wsDiarios, 'Fumantes_Diarios');
-
-      const wsNaoDiarios = rowsNaoDiarios.length ? XLSX.utils.json_to_sheet(rowsNaoDiarios) : XLSX.utils.json_to_sheet([{ Info: 'Nenhum participante registrado neste grupo.' }]);
-      XLSX.utils.book_append_sheet(wb, wsNaoDiarios, 'Fumantes_Nao_Diarios');
-
-      const wsNaoFumantes = rowsNaoFumantes.length ? XLSX.utils.json_to_sheet(rowsNaoFumantes) : XLSX.utils.json_to_sheet([{ Info: 'Nenhum participante registrado neste grupo.' }]);
-      XLSX.utils.book_append_sheet(wb, wsNaoFumantes, 'Nao_Fumantes');
-
-      const allTedaTrials = [];
-      records.forEach(rec => {
-        (rec.tedaTrialLogs || []).forEach(tr => {
-          allTedaTrials.push({
-            'ID_Participante': rec.participant.id,
-            'Grupo_Tabagismo': rec.participant.smokingGroup || 'Não fumante',
-            'Condicao': tr.condicao === 'ganho' ? 'Ganho (Receber)' : 'Pagamento (Perda)',
-            'Atraso_Rotulo': tr.atrasoRotulo,
-            'Dias_Atraso': tr.diasAtraso,
-            'Tentativa': tr.tentativa,
-            'Valor_Imediato_Oferecido_(R$)': tr.valorImediatoOferecido,
-            'Valor_Atrasado_Fixo_(R$)': tr.valorAtrasadoFixo,
-            'Escolha_Realizada': tr.escolha,
-            'Ajuste_Aplicado_(R$)': tr.ajusteAplicado,
-            'Tempo_Reacao_Ms': tr.tempoReacaoMs,
-            'Data_Hora': tr.timestamp
-          });
-        });
-      });
-      if (allTedaTrials.length) {
-        const wsTedaTrials = XLSX.utils.json_to_sheet(allTedaTrials);
-        XLSX.utils.book_append_sheet(wb, wsTedaTrials, 'TEDA_Todas_Escolhas');
-      }
-
-      const allEvaRatings = [];
-      records.forEach(rec => {
-        (rec.evaResponses || []).forEach(ev => {
-          allEvaRatings.push({
-            'ID_Participante': rec.participant.id,
-            'Grupo_Tabagismo': rec.participant.smokingGroup || 'Não fumante',
-            'Ordem_Apresentacao': ev.ordemApresentacao,
-            'Nome_Arquivo_Original': ev.nomeArquivo,
-            'Categoria_Imagem': ev.categoria,
-            'Escore_Agradavel_Desagradavel_(0-100)': ev.eva1_Agradavel_Desagradavel,
-            'Escore_Atencao_(0-100)': ev.eva3_Atencao,
-            'Tempo_Reacao_Ms': ev.tempoReacaoMs,
-            'Data_Hora': ev.timestamp
-          });
-        });
-      });
-      if (allEvaRatings.length) {
-        const wsEvaRatings = XLSX.utils.json_to_sheet(allEvaRatings);
-        XLSX.utils.book_append_sheet(wb, wsEvaRatings, 'EVA_Todas_Imagens');
-      }
-
-      return wb;
     }
 
     function saveCurrentParticipantToStorage() {
@@ -2365,9 +2342,9 @@
       }
 
       try {
-        const wb = buildSegregatedWorkbook(db);
-        XLSX.writeFile(wb, `Banco_Acumulado_Grupos_EVA_TEDA_${new Date().toISOString().slice(0, 10)}.xlsx`);
-        showToast('Banco acumulado exportado com sucesso com todas as abas analíticas!');
+        const wb = buildThematicWorkbook(db);
+        XLSX.writeFile(wb, `Banco_Acumulado_Completo_USP_EVA_TEDA_${new Date().toISOString().slice(0, 10)}.xlsx`);
+        showToast('Banco acumulado exportado com sucesso com as 6 abas analíticas!');
       } catch (e) {
         console.error(e);
         showToast('Erro ao exportar banco acumulado.', true);
@@ -2375,19 +2352,19 @@
     }
 
     function getGoogleSheetUrl() {
-      return localStorage.getItem(STORAGE_KEY_GSHEET) || '';
+      return localStorage.getItem(STORAGE_KEY_GSHEET) || DEFAULT_GOOGLE_SHEETS_URL || '';
     }
 
     function loadSavedGoogleSheetUrl() {
-      const savedUrl = getGoogleSheetUrl();
+      const activeUrl = getGoogleSheetUrl();
       const input = document.getElementById('inputGoogleSheetsUrl');
       const badge = document.getElementById('sheetConnectionBadge');
-      if (input && savedUrl) {
-        input.value = savedUrl;
+      if (input && activeUrl) {
+        input.value = activeUrl;
       }
       if (badge) {
-        if (savedUrl) {
-          badge.textContent = 'Configurado';
+        if (activeUrl) {
+          badge.textContent = 'Conectado à Planilha';
           badge.className = 'text-[11px] font-semibold px-2 py-0.5 rounded-lg neu-inset text-emerald-700 bg-emerald-50';
         } else {
           badge.textContent = 'Não configurado';
@@ -2411,30 +2388,41 @@
     }
 
     async function testGoogleSheetsWebhook() {
-      const url = document.getElementById('inputGoogleSheetsUrl').value.trim();
+      const url = document.getElementById('inputGoogleSheetsUrl').value.trim() || getGoogleSheetUrl();
       if (!url) {
-        showToast('Por favor, informe a URL do Webhook primeiro.', true);
+        showToast('Por favor, informe ou configure a URL do Webhook primeiro.', true);
         return;
       }
 
-      showToast('Testando envio de teste para a planilha...');
+      showToast('Disparando teste de gravação nas 6 abas temáticas...');
       try {
         await fetch(url, {
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
-            group: 'Não fumante',
-            row: {
+            sociodemographicRow: {
               ID_Participante: 'TESTE_CONEXAO',
-              Data_Hora: new Date().toLocaleString('pt-BR'),
-              Status: 'Conexão efetuada com sucesso!'
+              Idade: '25',
+              Grupo_Tabagismo: 'Não fumante',
+              Identidade_Genero: 'Teste de Validação',
+              Data_Conclusao: new Date().toLocaleString('pt-BR'),
+              Status: 'Conexão confirmada com sucesso!'
             },
-            tedaTrials: [],
-            evaRatings: []
+            gytsRow: {
+              ID_Participante: 'TESTE_CONEXAO',
+              Idade: '25',
+              Grupo_Tabagismo: 'Não fumante',
+              GYTS_Q1_Experimentou_Fumar: 'Não',
+              Data_Registro: new Date().toLocaleString('pt-BR')
+            },
+            cravingRow: null,
+            fagerstromRow: null,
+            evaRows: [],
+            tedaRows: []
           })
         });
-        showToast('Comando de teste disparado! Verifique a sua planilha.');
+        showToast('Comando enviado! Abra sua planilha e verifique as novas abas.');
       } catch (err) {
         console.error(err);
         showToast('Erro ao disparar conexão com o Google Sheets.', true);
@@ -2455,35 +2443,147 @@
       }
 
       try {
-        const consolidatedRow = buildConsolidatedGroupRow(currentRecord);
-        const payload = {
-          group: currentRecord.participant.smokingGroup || 'Não fumante',
-          row: consolidatedRow,
-          tedaTrials: (currentRecord.tedaTrialLogs || []).map(tr => ({
-            'ID_Participante': currentRecord.participant.id,
-            'Grupo_Tabagismo': currentRecord.participant.smokingGroup || 'Não fumante',
+        const p = currentRecord.participant;
+        const s = p.sociodemographic || {};
+        const g = p.gyts || {};
+        const c = p.craving || null;
+        const f = p.fagerstrom || null;
+        const ips = currentRecord.tedaIndifferencePoints || [];
+
+        // 1. Linha Sociodemográfica
+        const sociodemographicRow = {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Identidade_Genero': p.gender || s.identidadeGenero || '',
+          'Data_Nascimento': s.dataNascimento || '',
+          'Etnia': s.etnia || '',
+          'Estado_Civil': s.estadoCivil || '',
+          'Filhos_Quantidade': s.filhos !== undefined ? s.filhos : 0,
+          'Escolaridade_Maxima': s.escolaridade || '',
+          'Trabalhando_Atualmente': s.trabalhandoAtualmente || '',
+          'Diagnostico_Medico_Doenca': s.diagnosticoDoenca || '',
+          'Uso_Alcool': s.usoAlcool || '',
+          'Uso_Outras_Drogas': s.usoOutrasDrogas || '',
+          'Tratamento_Parar_Fumar_Servico_Saude': s.tratamentoServicoSaude || '',
+          'Medicacao_Parar_Fumar': s.medicacaoPararFumar || '',
+          'Quer_Parar_Fumar': s.querPararFumar || '',
+          'Ja_Buscou_Auxilio': s.buscouAuxilio || '',
+          'Quantas_Vezes_Buscou_Auxilio': s.quantasVezesAuxilio || '0',
+          'Data_Inicio': p.startedAt,
+          'Data_Conclusao': p.completedAt
+        };
+
+        // 2. Linha GYTS
+        const gytsRow = {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'GYTS_Q1_Experimentou_Fumar': g.q1_experimentou || '',
+          'GYTS_Q2_Idade_Primeira_Vez': g.q2_idade_primeira_vez || '',
+          'GYTS_Q3_Dias_Fumados_Ultimos_30d': g.q3_dias_fumados_30d || '',
+          'GYTS_Q4_Quantidade_Cigarros_Por_Dia': g.q4_quantidade_cigarros_dia || '',
+          'GYTS_Q5_Sabores_Cigarros_Ultimos_30d': g.q5_sabores_cigarros || '',
+          'Data_Registro': p.completedAt || p.startedAt
+        };
+
+        // 3. Linha Fissura
+        const cravingRow = c ? {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Status_Questionario': 'Respondido',
+          'Escore_Total_Fissura': c.escoreTotal,
+          'Media_Itens_Fissura': c.media,
+          'Item_1': c.item_1, 'Item_2': c.item_2, 'Item_3': c.item_3, 'Item_4': c.item_4,
+          'Item_5': c.item_5, 'Item_6': c.item_6, 'Item_7': c.item_7, 'Item_8': c.item_8,
+          'Item_9': c.item_9, 'Item_10': c.item_10, 'Item_11': c.item_11, 'Item_12': c.item_12,
+          'Data_Resposta': c.respondidoEm
+        } : {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Status_Questionario': 'Não Aplicável (Não Fumante)',
+          'Escore_Total_Fissura': 'N/A',
+          'Media_Itens_Fissura': 'N/A',
+          'Data_Resposta': 'N/A'
+        };
+
+        // 4. Linha Fagerström
+        const fagerstromRow = f ? {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Status_Questionario': 'Respondido',
+          'Pontuacao_Final_Total': f.escoreTotal,
+          'Grau_Dependencia_Conclusao': f.grauDependencia,
+          'Q1_Tempo_Apos_Acordar': f.q1_resposta,
+          'Q1_Pontos': f.q1_pontos,
+          'Q2_Dificil_Nao_Fumar_Locais_Proibidos': f.q2_resposta,
+          'Q2_Pontos': f.q2_pontos,
+          'Q3_Cigarro_Mais_Satisfacao': f.q3_resposta,
+          'Q3_Pontos': f.q3_pontos,
+          'Q4_Quantidade_Cigarros_Por_Dia': f.q4_resposta,
+          'Q4_Pontos': f.q4_pontos,
+          'Q5_Fuma_Mais_Frequentemente_Manha': f.q5_resposta,
+          'Q5_Pontos': f.q5_pontos,
+          'Q6_Fuma_Doente_De_Cama': f.q6_resposta,
+          'Q6_Pontos': f.q6_pontos,
+          'Data_Resposta': f.respondidoEm
+        } : {
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Status_Questionario': 'Não Aplicável (Não Fumante)',
+          'Pontuacao_Final_Total': 'N/A',
+          'Grau_Dependencia_Conclusao': 'N/A',
+          'Data_Resposta': 'N/A'
+        };
+
+        // 5. Linhas da EVA
+        const evaRows = (currentRecord.evaResponses || []).map(ev => ({
+          'ID_Participante': p.id,
+          'Idade': p.age,
+          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
+          'Ordem_Apresentacao': ev.ordemApresentacao,
+          'Identificacao_Imagem_ID': ev.idImagem,
+          'Nome_Arquivo_Original': ev.nomeArquivo,
+          'Categoria_Imagem': ev.categoria,
+          'Agradavel_Desagradavel_(0-100)': ev.eva1_Agradavel_Desagradavel,
+          'Atencao_(0-100)': ev.eva3_Atencao,
+          'Tempo_Reacao_Ms': ev.tempoReacaoMs,
+          'Data_Hora': ev.timestamp
+        }));
+
+        // 6. Linhas da TEDA
+        const tedaRows = (currentRecord.tedaTrialLogs || []).map(tr => {
+          const matchingIp = ips.find(item => item.condicao === tr.condicao && item.atrasoId === tr.atrasoId);
+          return {
+            'ID_Participante': p.id,
+            'Idade': p.age,
+            'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
             'Condicao': tr.condicao === 'ganho' ? 'Ganho (Receber)' : 'Pagamento (Perda)',
             'Atraso_Rotulo': tr.atrasoRotulo,
             'Dias_Atraso': tr.diasAtraso,
             'Tentativa': tr.tentativa,
             'Valor_Imediato_Oferecido_(R$)': tr.valorImediatoOferecido,
             'Valor_Atrasado_Fixo_(R$)': tr.valorAtrasadoFixo,
-            'Escolha_Realizada': tr.escolha,
+            'Escolha_Participante': tr.escolha,
             'Ajuste_Aplicado_(R$)': tr.ajusteAplicado,
+            'Ponto_Indiferenca_Final_Atraso_(R$)': matchingIp ? matchingIp.pontoIndiferenca : 'N/A',
+            'Proporcao_Ponto_Indiferenca': matchingIp ? matchingIp.proporcao : 'N/A',
             'Tempo_Reacao_Ms': tr.tempoReacaoMs,
             'Data_Hora': tr.timestamp
-          })),
-          evaRatings: (currentRecord.evaResponses || []).map(ev => ({
-            'ID_Participante': currentRecord.participant.id,
-            'Grupo_Tabagismo': currentRecord.participant.smokingGroup || 'Não fumante',
-            'Ordem_Apresentacao': ev.ordemApresentacao,
-            'Nome_Arquivo_Original': ev.nomeArquivo,
-            'Categoria_Imagem': ev.categoria,
-            'Escore_Agradavel_Desagradavel_(0-100)': ev.eva1_Agradavel_Desagradavel,
-            'Escore_Atencao_(0-100)': ev.eva3_Atencao,
-            'Tempo_Reacao_Ms': ev.tempoReacaoMs,
-            'Data_Hora': ev.timestamp
-          }))
+          };
+        });
+
+        const payload = {
+          sociodemographicRow,
+          gytsRow,
+          cravingRow,
+          fagerstromRow,
+          evaRows,
+          tedaRows
         };
 
         await fetch(url, {
