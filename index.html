@@ -242,7 +242,7 @@
     
     <div class="flex items-center gap-3">
       <span id="badgeCurrentPhase" class="text-xs px-3.5 py-1.5 rounded-xl neu-inset font-semibold text-slate-600">
-        Recepção
+        Boas-vindas
       </span>
       <button id="btnOpenResearcherModal" type="button" class="hidden text-xs px-3 py-1.5 rounded-xl neu-btn text-slate-500 font-semibold cursor-pointer">
         <i class="ph ph-gear text-sm"></i>
@@ -251,6 +251,55 @@
   </header>
 
   <main class="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 md:p-8 flex flex-col justify-center">
+
+    <!-- TELA PRÉVIA: AVISO E INSTRUÇÕES INICIAIS -->
+    <section id="viewWelcomeNotice" class="space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10 max-w-3xl mx-auto">
+      <div class="text-center space-y-3 pb-3 border-b border-slate-300/60">
+        <div class="w-16 h-16 mx-auto rounded-2xl neu-raised flex items-center justify-center text-blue-600 text-3xl">
+          <i class="ph ph-desktop"></i>
+        </div>
+        <span class="text-xs font-bold px-3 py-1 rounded-full neu-inset text-blue-700 uppercase tracking-wider">
+          Pesquisa de Doutorado &bull; USP
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
+          Aviso Importante aos Participantes
+        </h2>
+      </div>
+
+      <div class="neu-inset-deep rounded-2xl p-6 sm:p-8 space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed font-sans select-text">
+        <p class="font-bold text-slate-800 text-base sm:text-lg">Olá!</p>
+        
+        <p>Agradecemos pela sua disponibilidade e pela participação nesta pesquisa de doutorado. Sua colaboração é muito importante para a realização deste estudo.</p>
+        
+        <div class="p-4 rounded-xl neu-raised-sm bg-blue-50/40 border border-blue-200/50 space-y-2">
+          <div class="flex items-center gap-2 text-blue-700 font-bold text-sm">
+            <i class="ph ph-clock text-lg"></i>
+            <span>Duração estimada: aproximadamente 35 minutos</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600">
+            Recomendamos que você esteja em um local confortável e tranquilo e utilize, preferencialmente, um <strong>computador ou notebook</strong>.
+          </p>
+        </div>
+
+        <div class="flex items-start gap-3 p-4 rounded-xl neu-raised-sm bg-rose-50/40 border border-rose-200/50 text-xs sm:text-sm text-rose-800">
+          <i class="ph ph-warning-circle text-xl flex-shrink-0 mt-0.5 text-rose-600"></i>
+          <span><strong>Atenção:</strong> Para garantir o correto funcionamento do experimento, <strong>não utilize celular ou tablet</strong>.</span>
+        </div>
+
+        <p class="pt-2 text-slate-600 text-sm">
+          Quando estiver preparado(a), clique em <strong>“Avançar”</strong> para iniciar.
+        </p>
+
+        <p class="font-semibold text-slate-800 text-sm">Agradecemos pela sua participação!</p>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button type="button" onclick="goToOnboarding()" class="w-full sm:w-auto px-9 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-base">
+          <span>Avançar</span>
+          <i class="ph ph-arrow-right font-bold"></i>
+        </button>
+      </div>
+    </section>
 
     <!-- TELA DE EXCLUSÃO: MENORES DE 18 ANOS -->
     <section id="viewIneligible" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-12 text-center space-y-6">
@@ -273,7 +322,7 @@
     </section>
 
     <!-- TELA INICIAL: TCLE & IDENTIFICAÇÃO BÁSICA -->
-    <section id="viewOnboarding" class="space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10">
+    <section id="viewOnboarding" class="hidden space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10">
       <div class="pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-300/60">
         <div>
           <span class="text-xs font-bold px-3 py-1 rounded-full neu-inset text-blue-700 uppercase tracking-wider">
@@ -1295,12 +1344,20 @@
     let tedaTrialLogs = [];
     let tedaIndifferencePoints = [];
 
-    // URL oficial do Google Apps Script já vinculada de fábrica
+    // URL oficial do Google Apps Script para recepção e gravação nas 6 abas
     const DEFAULT_GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-3dfp2pmgBN9jsP3-wyWs3waXp3i0X139-gUA3L5zvzvYW4mvdKOFsphDC4SGMyW-sg/exec';
     const STORAGE_KEY_GSHEET = 'eva_teda_google_sheet_url';
     const DB_NAME = 'EVATEDA_StimuliDB';
     const DB_VERSION = 1;
     const STORE_NAME = 'stimuli_images';
+
+    /* --- TRANSIÇÃO DO AVISO PRÉVIO PARA O TCLE --- */
+    function goToOnboarding() {
+      document.getElementById('viewWelcomeNotice').classList.add('hidden');
+      document.getElementById('viewOnboarding').classList.remove('hidden');
+      document.getElementById('badgeCurrentPhase').textContent = 'Recepção';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     /* --- GESTOR DE BANCO INDEXEDDB PERMANENTE --- */
     function openImageDB() {
