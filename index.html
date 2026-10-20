@@ -252,8 +252,8 @@
 
   <main class="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 md:p-8 flex flex-col justify-center">
 
-    <!-- TELA PRÉVIA: AVISO E INSTRUÇÕES INICIAIS -->
-    <section id="viewWelcomeNotice" class="space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10 max-w-3xl mx-auto">
+    <!-- TELA PRÉVIA: AVISO E INSTRUÇÕES INICIAIS (COM LETRAS MAIORES, TEXTO JUSTIFICADO E DIAGRAMAÇÃO OTIMIZADA) -->
+    <section id="viewWelcomeNotice" class="space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10 max-w-4xl mx-auto w-full my-auto">
       <div class="text-center space-y-3 pb-3 border-b border-slate-300/60">
         <div class="w-16 h-16 mx-auto rounded-2xl neu-raised flex items-center justify-center text-blue-600 text-3xl">
           <i class="ph ph-desktop"></i>
@@ -261,56 +261,64 @@
         <span class="text-xs font-bold px-3 py-1 rounded-full neu-inset text-blue-700 uppercase tracking-wider">
           Pesquisa de Doutorado &bull; USP
         </span>
-        <h2 class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-800 tracking-tight">
           Aviso Importante aos Participantes
         </h2>
       </div>
 
-      <div class="neu-inset-deep rounded-2xl p-6 sm:p-8 space-y-4 text-sm sm:text-base text-slate-700 leading-relaxed font-sans select-text">
-        <p class="font-bold text-slate-800 text-base sm:text-lg">Olá!</p>
+      <div class="neu-inset-deep rounded-2xl p-6 sm:p-8 lg:p-10 space-y-5 text-slate-700 leading-relaxed font-sans select-text">
+        <p class="font-extrabold text-slate-900 text-lg sm:text-xl lg:text-2xl text-left">
+          Olá!
+        </p>
         
-        <p>Agradecemos pela sua disponibilidade e pela participação nesta pesquisa de doutorado. Sua colaboração é muito importante para a realização deste estudo.</p>
+        <p class="text-base sm:text-lg lg:text-xl text-justify leading-relaxed">
+          Agradecemos pela sua disponibilidade e pela participação nesta pesquisa de doutorado. Sua colaboração é muito importante para a realização deste estudo.
+        </p>
         
-        <div class="p-4 rounded-xl neu-raised-sm bg-blue-50/40 border border-blue-200/50 space-y-2">
-          <div class="flex items-center gap-2 text-blue-700 font-bold text-sm">
-            <i class="ph ph-clock text-lg"></i>
+        <div class="p-5 rounded-2xl neu-raised-sm bg-blue-50/50 border border-blue-200/60 space-y-3">
+          <div class="flex items-center gap-2.5 text-blue-700 font-extrabold text-base sm:text-lg">
+            <i class="ph ph-clock text-2xl flex-shrink-0"></i>
             <span>Duração estimada: aproximadamente 35 minutos</span>
           </div>
-          <p class="text-xs sm:text-sm text-slate-600">
+          <p class="text-sm sm:text-base lg:text-lg text-slate-700 text-justify leading-relaxed">
             Recomendamos que você esteja em um local confortável e tranquilo e utilize, preferencialmente, um <strong>computador ou notebook</strong>.
           </p>
         </div>
 
-        <div class="flex items-start gap-3 p-4 rounded-xl neu-raised-sm bg-rose-50/40 border border-rose-200/50 text-xs sm:text-sm text-rose-800">
-          <i class="ph ph-warning-circle text-xl flex-shrink-0 mt-0.5 text-rose-600"></i>
-          <span><strong>Atenção:</strong> Para garantir o correto funcionamento do experimento, <strong>não utilize celular ou tablet</strong>.</span>
+        <div class="flex items-start gap-3.5 p-5 rounded-2xl neu-raised-sm bg-rose-50/50 border border-rose-200/60 text-rose-900">
+          <i class="ph ph-warning-circle text-2xl flex-shrink-0 mt-0.5 text-rose-600"></i>
+          <span class="text-sm sm:text-base lg:text-lg text-justify leading-relaxed">
+            <strong>Atenção:</strong> Para garantir o correto funcionamento do experimento, <strong>não utilize celular ou tablet</strong>.
+          </p>
         </div>
 
-        <p class="pt-2 text-slate-600 text-sm">
+        <p class="text-base sm:text-lg lg:text-xl text-justify text-slate-700 pt-1 leading-relaxed">
           Quando estiver preparado(a), clique em <strong>“Avançar”</strong> para iniciar.
         </p>
 
-        <p class="font-semibold text-slate-800 text-sm">Agradecemos pela sua participação!</p>
+        <p class="font-bold text-slate-900 text-base sm:text-lg lg:text-xl text-left pt-1">
+          Agradecemos pela sua participação!
+        </p>
       </div>
 
       <div class="pt-2 flex justify-end">
-        <button type="button" onclick="goToOnboarding()" class="w-full sm:w-auto px-9 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2 cursor-pointer text-base">
+        <button type="button" onclick="goToOnboarding()" class="w-full sm:w-auto px-10 py-4 neu-btn-primary font-bold rounded-2xl flex items-center justify-center gap-2.5 cursor-pointer text-base sm:text-lg">
           <span>Avançar</span>
-          <i class="ph ph-arrow-right font-bold"></i>
+          <i class="ph ph-arrow-right font-bold text-lg sm:text-xl"></i>
         </button>
       </div>
     </section>
 
     <!-- TELA DE EXCLUSÃO: MENORES DE 18 ANOS -->
-    <section id="viewIneligible" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-12 text-center space-y-6">
+    <section id="viewIneligible" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-12 text-center space-y-6 max-w-xl mx-auto my-auto">
       <div class="w-24 h-24 mx-auto rounded-3xl neu-raised flex items-center justify-center text-rose-500 text-5xl">
         <i class="ph ph-hand-stop"></i>
       </div>
-      <div class="space-y-3 max-w-xl mx-auto">
+      <div class="space-y-3">
         <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
           Obrigado pela participação, mas você não se enquadra no nosso experimento.
         </h2>
-        <p class="text-slate-600 text-base leading-relaxed">
+        <p class="text-slate-600 text-base leading-relaxed text-justify">
           De acordo com as diretrizes do Comitê de Ética em Pesquisa e os critérios metodológicos deste estudo, a participação é restrita exclusivamente a voluntários com idade igual ou superior a 18 anos.
         </p>
       </div>
@@ -322,7 +330,7 @@
     </section>
 
     <!-- TELA INICIAL: TCLE & IDENTIFICAÇÃO BÁSICA -->
-    <section id="viewOnboarding" class="hidden space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10">
+    <section id="viewOnboarding" class="hidden space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10 max-w-4xl mx-auto w-full my-auto">
       <div class="pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-300/60">
         <div>
           <span class="text-xs font-bold px-3 py-1 rounded-full neu-inset text-blue-700 uppercase tracking-wider">
@@ -338,7 +346,7 @@
         </button>
       </div>
 
-      <div class="neu-inset-deep rounded-2xl p-5 sm:p-7 max-h-80 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed font-sans select-text">
+      <div class="neu-inset-deep rounded-2xl p-5 sm:p-7 max-h-80 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed font-sans select-text text-justify">
         <div class="text-center pb-2 border-b border-slate-300/70">
           <p class="font-extrabold text-slate-900 uppercase text-sm sm:text-base">USP - Universidade de São Paulo</p>
           <p class="font-bold text-slate-600">TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO</p>
@@ -364,7 +372,7 @@
         
         <p>Em relação às dúvidas sobre os direitos do participante, o Comitê de Ética em Pesquisa do Instituto de Psicologia da USP (CEPH-IPUSP) estará à disposição pelo e-mail <strong>cep.ip@usp.br</strong> ou telefone (11) 3091-4182. Endereço: Av. Prof. Mello Moraes, nº 1721, Bloco G, 2º andar, sala 27, Cidade Universitária, São Paulo - SP.</p>
         
-        <div class="border-t border-slate-300/70 pt-3 text-[11px] text-slate-500 font-mono space-y-1">
+        <div class="border-t border-slate-300/70 pt-3 text-[11px] text-slate-500 font-mono space-y-1 text-left">
           <p>Documento assinado digitalmente: WILLER BRUNO ANDRÉ SILVA (gov.br)</p>
           <p>De acordo com a Resolução 466/2012 do Conselho Nacional de Saúde.</p>
         </div>
@@ -401,7 +409,7 @@
     </section>
 
     <!-- QUESTIONÁRIO SOCIODEMOGRÁFICO -->
-    <section id="viewSociodemographic" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8">
+    <section id="viewSociodemographic" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8 max-w-5xl mx-auto w-full my-auto">
       <div class="border-b border-slate-300/60 pb-4">
         <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
           Por favor, responda a todas as questões com sinceridade.
@@ -632,7 +640,7 @@
     </section>
 
     <!-- QUESTIONÁRIO DE TABAGISMO (GYTS) -->
-    <section id="viewGYTS" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8">
+    <section id="viewGYTS" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8 max-w-5xl mx-auto w-full my-auto">
       <div class="pb-3 border-b border-slate-300/60">
         <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
           As próximas perguntas são sobre fumar cigarros. Essas perguntas incluem apenas o consumo de cigarro industrializado ou feito à mão, isto é, cigarro de palha (ou paiero).
@@ -839,13 +847,13 @@
     </section>
 
     <!-- QUESTIONÁRIO DE FISSURA (PARA FUMANTES) -->
-    <section id="viewCraving" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8">
-      <div class="neu-raised-sm rounded-2xl p-5 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
-        <p class="font-extrabold text-slate-900 uppercase tracking-wider text-xs">Instruções:</p>
+    <section id="viewCraving" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8 max-w-5xl mx-auto w-full my-auto">
+      <div class="neu-raised-sm rounded-2xl p-5 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2 text-justify">
+        <p class="font-extrabold text-slate-900 uppercase tracking-wider text-xs text-left">Instruções:</p>
         <p>
           Indique o quanto você concorda ou discorda com cada uma das seguintes declarações marcando um dos pontos entre <strong>DISCORDO FORTEMENTE</strong> e <strong>CONCORDO FORTEMENTE</strong>. Quanto mais perto você marcar do final ou do começo indica o quanto você concorda ou não. Se você não concorda ou discorda de uma das afirmações, coloque sua marca no espaço do meio (ponto 4).
         </p>
-        <p class="text-slate-500 text-xs">
+        <p class="text-slate-500 text-xs text-left">
           Por favor, complete todos os itens. Estamos interessados em como você está pensando ou sentindo-se <em>neste momento</em>, conforme você vai respondendo o questionário.
         </p>
       </div>
@@ -863,7 +871,7 @@
     </section>
 
     <!-- QUESTIONÁRIO DE TOLERÂNCIA DE FAGERSTRÖM (PARA FUMANTES) -->
-    <section id="viewFagerstrom" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8">
+    <section id="viewFagerstrom" class="hidden neu-raised-lg rounded-3xl p-6 sm:p-10 space-y-8 max-w-5xl mx-auto w-full my-auto">
       <div class="pb-3 border-b border-slate-300/60">
         <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
           Por favor, responda a cada uma das perguntas abaixo selecionando a alternativa que melhor descreve os seus hábitos com o fumo.
@@ -1070,16 +1078,16 @@
     </section>
 
     <!-- INSTRUÇÕES DA TEDA -->
-    <section id="viewTedaInstructions" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-12 text-center space-y-8 max-w-3xl mx-auto">
+    <section id="viewTedaInstructions" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-12 text-center space-y-8 max-w-3xl mx-auto my-auto">
       <div class="w-24 h-24 mx-auto rounded-3xl neu-raised flex items-center justify-center text-blue-600 text-5xl">
         <i class="ph ph-scales"></i>
       </div>
       <div class="space-y-4">
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight">Tarefa de Decisão Financeira</h2>
-        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto">
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto text-justify">
           Nesta próxima etapa, serão apresentadas duas opções de valores em dinheiro na tela.
         </p>
-        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto">
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto text-justify">
           Você deverá escolher qual alternativa prefere clicando sobre ela. Não há respostas certas ou erradas; responda de acordo com a sua preferência pessoal.
         </p>
       </div>
@@ -1092,7 +1100,7 @@
     </section>
 
     <!-- ETAPA 2: TEDA (DESVALORIZAÇÃO PELO ATRASO) -->
-    <section id="viewPhase2" class="hidden space-y-10">
+    <section id="viewPhase2" class="hidden space-y-10 my-auto">
       
       <div class="text-center pt-2">
         <h2 id="tedaPromptQuestion" class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-snug text-slate-800"></h2>
@@ -1127,13 +1135,13 @@
     </section>
 
     <!-- TELA DE CONCLUSÃO DO PARTICIPANTE -->
-    <section id="viewConclusion" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-14 space-y-8 text-center max-w-2xl mx-auto">
+    <section id="viewConclusion" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-14 space-y-8 text-center max-w-2xl mx-auto my-auto">
       <div class="w-24 h-24 mx-auto rounded-3xl neu-raised flex items-center justify-center text-emerald-600 text-5xl">
         <i class="ph ph-check-fat"></i>
       </div>
       <div class="space-y-3">
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight">Experimento Concluído!</h2>
-        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-lg mx-auto">
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-lg mx-auto text-justify">
           Suas respostas foram registradas com sucesso. Agradecemos imensamente pela sua valorosa colaboração nesta pesquisa científica do Laboratório de Neurociência e Comportamento da USP.
         </p>
       </div>
