@@ -38,7 +38,7 @@
       -webkit-user-select: none;
     }
 
-    /* Superfícies Neumórficas Salientes (Raised) */
+    /* Relevos Neumórficos Salientes */
     .neu-raised {
       background: var(--neu-bg);
       box-shadow: 9px 9px 18px var(--neu-dark), -9px -9px 18px var(--neu-light);
@@ -52,7 +52,7 @@
       box-shadow: 14px 14px 28px var(--neu-dark), -14px -14px 28px var(--neu-light);
     }
 
-    /* Superfícies Neumórficas Rebaixadas (Inset) */
+    /* Relevos Neumórficos Rebaixados */
     .neu-inset {
       background: var(--neu-bg);
       box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
@@ -62,7 +62,7 @@
       box-shadow: inset 6px 6px 12px #bcc9db, inset -6px -6px 12px var(--neu-light);
     }
 
-    /* Botões Neumórficos Táteis */
+    /* Botões Neumórficos */
     .neu-btn {
       background: var(--neu-bg);
       box-shadow: 6px 6px 14px var(--neu-dark), -6px -6px 14px var(--neu-light);
@@ -77,7 +77,7 @@
       transform: translateY(1px);
     }
 
-    /* Botões Principais com Gradiente Azul */
+    /* Botões Principais */
     .neu-btn-primary {
       background: var(--neu-accent-gradient);
       box-shadow: 5px 5px 15px rgba(37, 99, 235, 0.35), -5px -5px 15px var(--neu-light);
@@ -100,7 +100,7 @@
       cursor: not-allowed;
     }
 
-    /* Sliders Táteis da EVA */
+    /* Sliders Táteis da EVA com Estética Frutiger Glass Orb */
     input[type=range].neu-slider {
       -webkit-appearance: none;
       appearance: none;
@@ -112,7 +112,6 @@
       box-shadow: inset 3px 3px 6px #bcc9db, inset -3px -3px 6px var(--neu-light);
       cursor: pointer;
     }
-    /* Knobs táteis com estética Frutiger Aero (Glossy Glass Orb) */
     input[type=range].neu-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -147,7 +146,7 @@
       cursor: pointer;
     }
 
-    /* Botão Frutiger Aero */
+    /* Botão Frutiger Aero Cápsula Vítrea */
     .frutiger-btn {
       position: relative;
       overflow: hidden;
@@ -190,7 +189,7 @@
       border-color: rgba(255, 255, 255, 0.4);
     }
 
-    /* Transição suave restrita ao elemento alvo */
+    /* Transição suave restrita à moldura do estímulo (EVA) */
     .smooth-white-overlay {
       position: absolute;
       inset: 0;
@@ -205,6 +204,31 @@
       opacity: 1;
     }
 
+    /* Fade-in e Fade-out das escolhas TEDA */
+    .teda-choices-container {
+      transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity;
+    }
+    .teda-choices-container.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Animação de Piscar Duas Vezes (Double Blink) */
+    @keyframes doubleBlink {
+      0% { opacity: 1; transform: scale(1); }
+      20% { opacity: 0.15; transform: scale(0.96); }
+      40% { opacity: 1; transform: scale(1.04); }
+      60% { opacity: 0.15; transform: scale(0.96); }
+      80% { opacity: 1; transform: scale(1.02); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .animate-double-blink {
+      animation: doubleBlink 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      will-change: opacity, transform;
+    }
+
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
@@ -226,7 +250,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
 
-  <!-- CABEÇALHO -->
+  <!-- CABEÇALHO LIMPO E INSTITUCIONAL -->
   <header class="w-full px-6 py-4 flex items-center justify-between z-30">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-2xl neu-raised-sm flex items-center justify-center text-blue-600 shadow-sm">
@@ -236,7 +260,7 @@
         <h1 class="text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-700">
           Laboratório de Neurociência e Comportamento
         </h1>
-        <span class="text-[10px] text-slate-500 font-medium">Universidade de São Paulo &bull; USP</span>
+        <span class="text-[10px] text-slate-500 font-medium">Universidade de São Paulo &bull; IP-USP</span>
       </div>
     </div>
     
@@ -252,14 +276,14 @@
 
   <main class="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 md:p-8 flex flex-col justify-center">
 
-    <!-- TELA PRÉVIA: AVISO E INSTRUÇÕES INICIAIS (COM LETRAS MAIORES, TEXTO JUSTIFICADO E DIAGRAMAÇÃO OTIMIZADA) -->
+    <!-- TELA PRÉVIA: AVISO E INSTRUÇÕES INICIAIS -->
     <section id="viewWelcomeNotice" class="space-y-6 neu-raised-lg rounded-3xl p-6 sm:p-10 max-w-4xl mx-auto w-full my-auto">
       <div class="text-center space-y-3 pb-3 border-b border-slate-300/60">
         <div class="w-16 h-16 mx-auto rounded-2xl neu-raised flex items-center justify-center text-blue-600 text-3xl">
           <i class="ph ph-desktop"></i>
         </div>
         <span class="text-xs font-bold px-3 py-1 rounded-full neu-inset text-blue-700 uppercase tracking-wider">
-          Pesquisa de Doutorado &bull; USP
+          Pesquisa de Doutorado &bull; IP-USP
         </span>
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-800 tracking-tight">
           Aviso Importante aos Participantes
@@ -268,11 +292,11 @@
 
       <div class="neu-inset-deep rounded-2xl p-6 sm:p-8 lg:p-10 space-y-5 text-slate-700 leading-relaxed font-sans select-text">
         <p class="font-extrabold text-slate-900 text-lg sm:text-xl lg:text-2xl text-left">
-          Olá!
+          Olá, sou Willer Bruno, Graduado em Ciências Biomédicas, M.e e aluno de Doutorado do programa de neurociências e comportamento do IP-USP!
         </p>
         
         <p class="text-base sm:text-lg lg:text-xl text-justify leading-relaxed">
-          Agradecemos pela sua disponibilidade e pela participação nesta pesquisa de doutorado. Sua colaboração é muito importante para a realização deste estudo.
+          Agradeço pela sua disponibilidade e pela participação na minha pesquisa. Sua colaboração é muito importante para a realização deste estudo
         </p>
         
         <div class="p-5 rounded-2xl neu-raised-sm bg-blue-50/50 border border-blue-200/60 space-y-3">
@@ -289,7 +313,7 @@
           <i class="ph ph-warning-circle text-2xl flex-shrink-0 mt-0.5 text-rose-600"></i>
           <span class="text-sm sm:text-base lg:text-lg text-justify leading-relaxed">
             <strong>Atenção:</strong> Para garantir o correto funcionamento do experimento, <strong>não utilize celular ou tablet</strong>.
-          </p>
+          </span>
         </div>
 
         <p class="text-base sm:text-lg lg:text-xl text-justify text-slate-700 pt-1 leading-relaxed">
@@ -334,7 +358,7 @@
       <div class="pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-300/60">
         <div>
           <span class="text-xs font-bold px-3 py-1 rounded-full neu-inset text-blue-700 uppercase tracking-wider">
-            Universidade de São Paulo &bull; USP
+            Universidade de São Paulo &bull; IP-USP
           </span>
           <h2 class="text-2xl sm:text-3xl font-black text-slate-800 mt-2 tracking-tight">
             Termo de Consentimento Livre e Esclarecido (TCLE)
@@ -352,7 +376,7 @@
           <p class="font-bold text-slate-600">TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO</p>
         </div>
         
-        <p>Você está sendo convidado pelo pesquisador <strong>Willer Bruno André Silva</strong>, do programa de Pós-graduação Mestrado em Neurociência e Comportamento da Universidade de São Paulo (USP) a participar desta pesquisa.</p>
+        <p>Você está sendo convidado pelo pesquisador <strong>Willer Bruno André Silva</strong>, do programa de Pós-Graduação em Neurociências e Comportamento da Universidade de São Paulo - IPUSP a participar desta pesquisa.</p>
         
         <p>O título da pesquisa é: <em>"Avaliação do Comportamento da dependência química: Uma comparação entre fumantes diários e não diários."</em> Informo que, após anuência, o participante da pesquisa receberá uma cópia do Termo de Consentimento Livre e Esclarecido assinado pelo pesquisador.</p>
         
@@ -374,7 +398,7 @@
         
         <div class="border-t border-slate-300/70 pt-3 text-[11px] text-slate-500 font-mono space-y-1 text-left">
           <p>Documento assinado digitalmente: WILLER BRUNO ANDRÉ SILVA (gov.br)</p>
-          <p>De acordo com a Resolução 466/2012 do Conselho Nacional de Saúde.</p>
+          <p>De acordo com a Resolução CNS 466/2012.</p>
         </div>
       </div>
 
@@ -665,7 +689,7 @@
           </div>
         </div>
 
-        <!-- Q2 -->
+        <!-- Q2 (Ordenação Vertical em 2 Colunas) -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             2. Quantos anos você tinha quando experimentou fumar um cigarro pela primeira vez (incluindo cigarros industrializados ou feitos a mão)?
@@ -710,7 +734,7 @@
           </div>
         </div>
 
-        <!-- Q3 -->
+        <!-- Q3 (Ordenação Vertical em 2 Colunas) -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             3. Nos últimos 30 dias, em quantos dias você fumou cigarros (incluindo cigarros industrializados ou feitos a mão)?
@@ -751,7 +775,7 @@
           </div>
         </div>
 
-        <!-- Q4 -->
+        <!-- Q4 (Ordenação Vertical em 2 Colunas) -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             4. Pense nos dias em que fumou cigarros (incluindo cigarros industrializados ou feitos a mão) nos últimos 30 dias. Quantos cigarros costumava fumar por dia?
@@ -792,7 +816,7 @@
           </div>
         </div>
 
-        <!-- Q5 -->
+        <!-- Q5 (Ordenação Vertical em 2 Colunas) -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             5. Que sabores de cigarros (incluindo cigarros industrializados ou feitos a mão) você fumou nos últimos 30 dias?
@@ -879,7 +903,7 @@
       </div>
 
       <form id="formFagerstrom" class="space-y-6" onsubmit="event.preventDefault(); submitFagerstrom();">
-        <!-- Q1 -->
+        <!-- Q1 (Vertical) -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             1. Quanto tempo após acordar você fuma seu primeiro cigarro?
@@ -942,7 +966,7 @@
           </div>
         </div>
 
-        <!-- Q4 -->
+        <!-- Q4 (Vertical) -->
         <div class="neu-raised-sm rounded-2xl p-6 space-y-3">
           <label class="block text-base font-bold text-slate-800">
             4. Quantos cigarros você fuma por dia?
@@ -1014,11 +1038,11 @@
       </form>
     </section>
 
-    <!-- ETAPA 1: AVALIAÇÃO DE IMAGENS (EVA) -->
+    <!-- ETAPA 1: AVALIAÇÃO DE IMAGENS (EVA COM 2 QUESTÕES & LAYOUT AMPLO) -->
     <section id="viewPhase1" class="hidden">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
-        <!-- Coluna da Esquerda: Imagem Ampliada -->
+        <!-- Coluna da Esquerda: Estímulo Visual Ampliado -->
         <div class="lg:col-span-7 xl:col-span-8 flex flex-col">
           <div class="relative neu-raised-lg rounded-3xl p-4 sm:p-6 flex-1 flex flex-col items-center justify-center overflow-hidden min-h-[380px] sm:min-h-[480px] lg:min-h-[560px] xl:min-h-[620px]">
             <div id="evaWhiteOverlay" class="smooth-white-overlay rounded-3xl"></div>
@@ -1029,11 +1053,11 @@
           </div>
         </div>
 
-        <!-- Coluna da Direita: Ferramentas de Avaliação -->
+        <!-- Coluna da Direita: Ferramentas Táteis da EVA -->
         <div class="lg:col-span-5 xl:col-span-4 neu-raised-lg rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6">
           
           <div class="space-y-6 my-auto">
-            <!-- Pergunta 1 -->
+            <!-- Pergunta 1: Agradabilidade -->
             <div class="space-y-3">
               <label class="block text-sm sm:text-base font-bold text-slate-800 text-center leading-snug">
                 Essa imagem é agradável ou desagradável?
@@ -1049,7 +1073,7 @@
 
             <div class="w-full h-px bg-slate-300/60 my-4"></div>
 
-            <!-- Pergunta 2 (Atenção) -->
+            <!-- Pergunta 2: Atenção Visual -->
             <div class="space-y-3">
               <label class="block text-sm sm:text-base font-bold text-slate-800 text-center leading-snug">
                 O quanto essa imagem lhe chama a atenção?
@@ -1064,7 +1088,7 @@
             </div>
           </div>
 
-          <!-- Botão Frutiger Aero -->
+          <!-- Botão Frutiger Aero Cápsula -->
           <div class="pt-4 flex justify-center">
             <button id="btnConfirmEva" type="button" disabled class="w-full px-8 py-3.5 frutiger-btn font-extrabold text-base tracking-wide cursor-pointer flex items-center justify-center gap-2">
               <span>Confirmar Avaliação</span>
@@ -1099,14 +1123,15 @@
       </div>
     </section>
 
-    <!-- ETAPA 2: TEDA (DESVALORIZAÇÃO PELO ATRASO) -->
+    <!-- ETAPA 2: TEDA (DESVALORIZAÇÃO PELO ATRASO COM BOTÕES IDÊNTICOS & DUPLO PISCAR) -->
     <section id="viewPhase2" class="hidden space-y-10 my-auto">
       
       <div class="text-center pt-2">
         <h2 id="tedaPromptQuestion" class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-snug text-slate-800"></h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
+      <!-- Container das escolhas com fade-in / fade-out suave -->
+      <div id="tedaChoicesContainer" class="teda-choices-container grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
         <!-- Opção Imediata -->
         <button id="btnChoiceImmediate" type="button" class="group relative neu-btn rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center gap-3 text-center cursor-pointer min-h-[220px]">
           <span id="tedaImmediateValue" class="text-2xl sm:text-3xl md:text-4xl font-black font-mono text-slate-800 tracking-normal block w-full text-center">
@@ -1117,14 +1142,13 @@
           </span>
         </button>
 
-        <!-- Opção Atrasada -->
+        <!-- Opção Atrasada (Estrutura idêntica à opção imediata) -->
         <button id="btnChoiceDelayed" type="button" class="group relative neu-btn rounded-3xl p-8 sm:p-10 flex flex-col items-center justify-center gap-3 text-center cursor-pointer min-h-[220px]">
           <span class="text-2xl sm:text-3xl md:text-4xl font-black font-mono text-slate-800 tracking-normal block w-full text-center">
             R$ 1.000,00
           </span>
           
           <div class="relative inline-block mt-2">
-            <div id="tedaDelayWhiteOverlay" class="smooth-white-overlay rounded-xl"></div>
             <span id="tedaDelayedLabel" class="text-2xl sm:text-3xl md:text-4xl font-black tracking-wider text-blue-600 block uppercase">
               EM UMA SEMANA
             </span>
@@ -1134,7 +1158,7 @@
       </div>
     </section>
 
-    <!-- TELA DE CONCLUSÃO DO PARTICIPANTE -->
+    <!-- TELA DE CONCLUSÃO DO PARTICIPANTE (SEM EXPOR PONTOS DE INDIFERENÇA OU DOWNLOAD) -->
     <section id="viewConclusion" class="hidden neu-raised-lg rounded-3xl p-8 sm:p-14 space-y-8 text-center max-w-2xl mx-auto my-auto">
       <div class="w-24 h-24 mx-auto rounded-3xl neu-raised flex items-center justify-center text-emerald-600 text-5xl">
         <i class="ph ph-check-fat"></i>
@@ -1142,7 +1166,7 @@
       <div class="space-y-3">
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight">Experimento Concluído!</h2>
         <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-lg mx-auto text-justify">
-          Suas respostas foram registradas com sucesso. Agradecemos imensamente pela sua valorosa colaboração nesta pesquisa científica do Laboratório de Neurociência e Comportamento da USP.
+          Suas respostas foram registradas com sucesso. Agradecemos imensamente pela sua valorosa colaboração nesta pesquisa científica do Laboratório de Neurociência e Comportamento do IP-USP.
         </p>
       </div>
 
@@ -1160,7 +1184,7 @@
 
   </main>
 
-  <!-- MODAL DO PESQUISADOR (ACESSO RESTRITO VIA CTRL+SHIFT+P OU ?admin=true) -->
+  <!-- PAINEL EXCLUSIVO DO PESQUISADOR (ACESSO RESTRITO VIA CTRL+SHIFT+P OU ?admin=true) -->
   <div id="modalResearcher" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="neu-raised-lg rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6">
       <div class="flex items-center justify-between border-b border-slate-300/60 pb-4">
@@ -1178,7 +1202,7 @@
         </button>
       </div>
 
-      <!-- Dados do último participante -->
+      <!-- Resumo Analítico do Último Participante -->
       <div id="researcherLastParticipantSection" class="hidden neu-inset-deep rounded-2xl p-5 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-300/70 pb-3">
           <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Último Participante: <span id="researcherLastParticipantId" class="text-blue-600 font-mono"></span></h4>
@@ -1205,7 +1229,7 @@
           </span>
         </div>
         <p class="text-xs text-slate-600 leading-relaxed">
-          Cole abaixo a URL do Web App gerada no Google Apps Script para receber os dados dos participantes em abas temáticas em tempo real:
+          Cole abaixo a URL do Web App gerada no Google Apps Script para receber os dados dos participantes em tempo real:
         </p>
         <div class="space-y-2">
           <input type="url" id="inputGoogleSheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl neu-inset font-mono text-xs text-slate-800 focus:outline-none">
@@ -1220,7 +1244,7 @@
         </div>
       </div>
 
-      <!-- Status das 120 Imagens com IndexedDB Permanente -->
+      <!-- Banco de Estímulos Visuais (120 Imagens) -->
       <div class="border-t border-slate-300/60 pt-4 space-y-4">
         <div class="flex items-center justify-between">
           <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Banco de Estímulos Visuais (120 Imagens)</h4>
@@ -1279,14 +1303,14 @@
     </div>
   </div>
 
-  <!-- Toast de Notificação -->
+  <!-- Toast Flutuante de Notificação -->
   <div id="toastBox" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none px-5 py-3.5 rounded-2xl neu-raised-lg text-slate-800 text-sm flex items-center gap-2.5 font-semibold">
     <i id="toastIcon" class="ph ph-info text-blue-600 text-xl"></i>
     <span id="toastMsg">Mensagem</span>
   </div>
 
   <footer class="w-full px-6 py-4 text-center text-xs text-slate-500 font-medium">
-    Laboratório de Neurociência e Comportamento &bull; USP &bull; Resolução CNS 466/2012
+    Laboratório de Neurociência e Comportamento &bull; IP-USP &bull; Resolução CNS 466/2012
   </footer>
 
   <script>
@@ -1352,7 +1376,7 @@
     let tedaTrialLogs = [];
     let tedaIndifferencePoints = [];
 
-    // URL oficial do Google Apps Script para recepção e gravação nas 6 abas
+    // URL Oficial do Google Apps Script Webhook
     const DEFAULT_GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz-3dfp2pmgBN9jsP3-wyWs3waXp3i0X139-gUA3L5zvzvYW4mvdKOFsphDC4SGMyW-sg/exec';
     const STORAGE_KEY_GSHEET = 'eva_teda_google_sheet_url';
     const DB_NAME = 'EVATEDA_StimuliDB';
@@ -1489,7 +1513,6 @@
     }
 
     async function inicializarBancoImagens() {
-      // 1. Tenta carregar do IndexedDB persistente se o pesquisador tiver importado
       const stored = await loadImagesFromIndexedDB();
       if (stored && stored.length > 0) {
         stimuliList = stored;
@@ -1498,7 +1521,6 @@
         return;
       }
 
-      // 2. Carrega referências com busca em cascata (imagens/imagens/ e imagens/)
       stimuliList = criarListaImagensPadrao(isDemoMode);
       setStorageBadge(false, 'Repositório GitHub');
     }
@@ -1530,7 +1552,6 @@
           const num3 = String(i).padStart(3, '0');
           const num2 = String(i).padStart(2, '0');
           
-          // Candidatos de URL em ordem prioritária de resolução
           const candidateUrls = [
             `imagens/imagens/${p.prefix}_${num3}.jpg`,
             `imagens/${p.prefix}_${num3}.jpg`,
@@ -2005,7 +2026,7 @@
       tedaTrialLogs = [];
       tedaIndifferencePoints = [];
 
-      iniciarBlocoAtraso(false);
+      iniciarBlocoAtraso(false, true);
     }
 
     function getActiveDelays() {
@@ -2015,47 +2036,67 @@
       return TEDA_FULL_DELAYS;
     }
 
-    function iniciarBlocoAtraso(withFade = true) {
+    function triggerDoubleBlink(element) {
+      if (!element) return;
+      element.classList.remove('animate-double-blink');
+      void element.offsetWidth; // Força reflow para reiniciar animação
+      element.classList.add('animate-double-blink');
+    }
+
+    function iniciarBlocoAtraso(delayUpdated = true, conditionUpdated = false) {
       valorAtrasado = 1000;
       valorImediato = valorAtrasado / 2;
       ajuste = valorAtrasado / 4;
       tentativa = 1;
 
-      apresentarTentativaAtual(withFade);
+      apresentarTentativaAtual(true, delayUpdated, conditionUpdated);
     }
 
-    function apresentarTentativaAtual(withFade = false) {
+    function apresentarTentativaAtual(withFade = true, blinkDelay = false, blinkCondition = false) {
       const delays = getActiveDelays();
       const currentDelay = delays[currentDelayIndex];
       const condition = tedaConditions[currentConditionIndex];
 
       const promptElem = document.getElementById('tedaPromptQuestion');
-      if (condition === 'ganho') {
-        promptElem.innerHTML = `Como você prefere <span class="text-emerald-600 font-black underline underline-offset-4 decoration-emerald-500/40">receber</span>?`;
-      } else {
-        promptElem.innerHTML = `Como você prefere <span class="text-rose-600 font-black underline underline-offset-4 decoration-rose-500/40">pagar</span>?`;
-      }
-
-      document.getElementById('tedaImmediateValue').textContent = formatCurrency(valorImediato);
-
       const delayLabelElem = document.getElementById('tedaDelayedLabel');
-      const delayOverlay = document.getElementById('tedaDelayWhiteOverlay');
+      const immediateValueElem = document.getElementById('tedaImmediateValue');
+      const choicesContainer = document.getElementById('tedaChoicesContainer');
+
+      const applyContentUpdates = () => {
+        if (condition === 'ganho') {
+          promptElem.innerHTML = `Como você prefere <span id="tedaConditionWord" class="inline-block text-emerald-600 font-black underline underline-offset-4 decoration-emerald-500/40">receber</span>?`;
+        } else {
+          promptElem.innerHTML = `Como você prefere <span id="tedaConditionWord" class="inline-block text-rose-600 font-black underline underline-offset-4 decoration-rose-500/40">pagar</span>?`;
+        }
+
+        immediateValueElem.textContent = formatCurrency(valorImediato);
+        delayLabelElem.textContent = currentDelay.label;
+
+        if (blinkCondition) {
+          const condWord = document.getElementById('tedaConditionWord');
+          triggerDoubleBlink(condWord);
+        }
+
+        if (blinkDelay) {
+          triggerDoubleBlink(delayLabelElem);
+        }
+      };
 
       if (withFade) {
         isTedaTransitioning = true;
-        delayOverlay.classList.add('active');
+        choicesContainer.classList.add('fade-out');
 
         setTimeout(() => {
-          delayLabelElem.textContent = currentDelay.label;
-          delayOverlay.classList.remove('active');
+          applyContentUpdates();
+          choicesContainer.classList.remove('fade-out');
 
           setTimeout(() => {
             isTedaTransitioning = false;
             tedaTrialStartTime = performance.now();
-          }, 250);
-        }, 250);
+          }, 220);
+        }, 220);
       } else {
-        delayLabelElem.textContent = currentDelay.label;
+        applyContentUpdates();
         tedaTrialStartTime = performance.now();
       }
     }
@@ -2097,7 +2138,7 @@
       }
 
       tentativa++;
-      apresentarTentativaAtual(false);
+      apresentarTentativaAtual(true, false, false);
     }
 
     function finalizarBloco(pontoIndiferenca) {
@@ -2117,13 +2158,13 @@
       currentDelayIndex++;
 
       if (currentDelayIndex < delays.length) {
-        iniciarBlocoAtraso(true);
+        iniciarBlocoAtraso(true, false);
       } else {
         currentDelayIndex = 0;
         currentConditionIndex++;
 
         if (currentConditionIndex < tedaConditions.length) {
-          iniciarBlocoAtraso(true);
+          iniciarBlocoAtraso(true, true);
         } else {
           concluirExperimento();
         }
@@ -2179,7 +2220,7 @@
       }).join('');
     }
 
-    /* --- GERAÇÃO MODULAR DE PLANILHAS (ABAS TEMÁTICAS) --- */
+    /* --- GERAÇÃO MODULAR DE PLANILHAS (6 ABAS ANALÍTICAS TEMÁTICAS) --- */
     function buildThematicWorkbook(records) {
       const wb = XLSX.utils.book_new();
 
@@ -2713,7 +2754,7 @@
       const tcleContent = `USP - UNIVERSIDADE DE SÃO PAULO
 TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO (TCLE)
 
-Você está sendo convidado pelo pesquisador Willer Bruno André Silva, do programa de Pós-graduação Mestrado em Neurociência e Comportamento da Universidade de São Paulo USP a participar desta pesquisa.
+Você está sendo convidado pelo pesquisador Willer Bruno André Silva, do programa de Pós-Graduação em Neurociências e Comportamento da Universidade de São Paulo - IPUSP a participar desta pesquisa.
 
 O título da pesquisa é: "Avaliação do Comportamento da dependência química: Uma comparação entre fumantes diários e não diários." Informo que, após anuência, o participante da pesquisa receberá uma cópia do Termo de Consentimento Livre e Esclarecido assinado pelo pesquisador.
 
