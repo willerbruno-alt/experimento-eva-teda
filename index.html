@@ -98,9 +98,7 @@
       color: #94a3b8;
       box-shadow: 3px 3px 8px var(--neu-dark), -3px -3px 8px var(--neu-light);
       cursor: not-allowed;
-    }
-
-    /* Sliders Táteis da EVA com Estética Frutiger Glass Orb */
+    /* Sliders Táteis da EVA com Estética Frutiger Glass Orb (Azul Translúcido Fixo) */
     input[type=range].neu-slider {
       -webkit-appearance: none;
       appearance: none;
@@ -118,31 +116,31 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.45) 30%, transparent 60%),
-                  linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.18) 51%, rgba(255, 255, 255, 0.35) 100%),
-                  var(--thumb-bg, #94a3b8);
-      border: 2.5px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25),
-                  0 0 16px var(--thumb-glow, rgba(148, 163, 184, 0.4)),
-                  inset 0 -2px 5px rgba(0, 0, 0, 0.4);
+      background: radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 35%, transparent 65%),
+                  linear-gradient(180deg, rgba(96, 165, 250, 0.72) 0%, rgba(37, 99, 235, 0.72) 48%, rgba(29, 78, 216, 0.75) 52%, rgba(30, 64, 175, 0.78) 100%);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4),
+                  0 0 14px rgba(59, 130, 246, 0.45),
+                  inset 0 -2px 5px rgba(15, 23, 42, 0.35);
       cursor: pointer;
       transition: transform 0.15s ease, filter 0.15s ease;
     }
     input[type=range].neu-slider::-webkit-slider-thumb:hover {
       transform: scale(1.15);
-      filter: brightness(1.1);
+      filter: brightness(1.08);
     }
     input[type=range].neu-slider::-moz-range-thumb {
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.45) 30%, transparent 60%),
-                  linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.18) 51%, rgba(255, 255, 255, 0.35) 100%),
-                  var(--thumb-bg, #94a3b8);
-      border: 2.5px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25),
-                  0 0 16px var(--thumb-glow, rgba(148, 163, 184, 0.4)),
-                  inset 0 -2px 5px rgba(0, 0, 0, 0.4);
+      background: radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 35%, transparent 65%),
+                  linear-gradient(180deg, rgba(96, 165, 250, 0.72) 0%, rgba(37, 99, 235, 0.72) 48%, rgba(29, 78, 216, 0.75) 52%, rgba(30, 64, 175, 0.78) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4),
+                  0 0 14px rgba(59, 130, 246, 0.45),
+                  inset 0 -2px 5px rgba(15, 23, 42, 0.35);
       cursor: pointer;
     }
 
@@ -1065,8 +1063,8 @@
               <div class="px-2">
                 <input type="range" id="evaSlider1" min="0" max="100" value="50" class="neu-slider">
                 <div class="flex justify-between items-center text-xs sm:text-sm font-bold tracking-wide mt-2 px-1">
-                  <span class="text-rose-600 uppercase">Desagradável</span>
-                  <span class="text-emerald-600 uppercase">Agradável</span>
+                  <span class="text-black uppercase">Desagradável</span>
+                  <span class="text-black uppercase">Agradável</span>
                 </div>
               </div>
             </div>
@@ -1081,8 +1079,8 @@
               <div class="px-2">
                 <input type="range" id="evaSlider2" min="0" max="100" value="50" class="neu-slider">
                 <div class="flex justify-between items-center text-xs sm:text-sm font-bold tracking-wide mt-2 px-1">
-                  <span class="text-rose-600 uppercase">Nada</span>
-                  <span class="text-emerald-600 uppercase">Muito</span>
+                  <span class="text-black uppercase">Nada</span>
+                  <span class="text-black uppercase">Muito</span>
                 </div>
               </div>
             </div>
@@ -1231,16 +1229,14 @@
         <p class="text-xs text-slate-600 leading-relaxed">
           Cole abaixo a URL do Web App gerada no Google Apps Script para receber os dados dos participantes em tempo real:
         </p>
-        <div class="space-y-2">
-          <input type="url" id="inputGoogleSheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl neu-inset font-mono text-xs text-slate-800 focus:outline-none">
-          <div class="flex justify-end gap-2">
-            <button type="button" onclick="testGoogleSheetsWebhook();" class="px-3 py-1.5 rounded-lg neu-btn text-slate-700 text-xs font-bold cursor-pointer">
-              Testar Conexão
-            </button>
-            <button type="button" onclick="saveGoogleSheetsWebhook();" class="px-4 py-1.5 rounded-lg neu-btn-primary text-xs font-bold cursor-pointer">
-              Salvar URL
-            </button>
-          </div>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="url" id="inputGoogleSheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3.5 py-2.5 rounded-xl neu-inset text-xs font-mono text-slate-800 focus:outline-none">
+          <button type="button" onclick="saveGoogleSheetsWebhook()" class="px-4 py-2.5 rounded-xl neu-btn-primary text-xs font-bold cursor-pointer">
+            Salvar URL
+          </button>
+          <button type="button" onclick="testGoogleSheetsWebhook()" class="px-4 py-2.5 rounded-xl neu-btn text-slate-700 text-xs font-bold cursor-pointer">
+            Testar Conexão
+          </button>
         </div>
       </div>
 
@@ -1293,7 +1289,7 @@
         <div class="flex gap-3">
           <button type="button" onclick="exportAccumulatedDatabase();" class="px-4 py-2.5 rounded-xl neu-btn-primary text-xs font-bold flex items-center gap-1.5 cursor-pointer">
             <i class="ph ph-database"></i>
-            <span>Exportar Banco Acumulado em 6 Abas (.xlsx)</span>
+            <span>Exportar Banco Acumulado em 5 Abas (.xlsx)</span>
           </button>
           <button type="button" onclick="clearAllStoredData();" class="px-4 py-2.5 rounded-xl neu-btn text-rose-600 text-xs font-bold cursor-pointer">
             Limpar Banco Local
@@ -1327,24 +1323,8 @@
       completedAt: null,
       sociodemographic: {},
       gyts: {},
-      craving: null,
       fagerstrom: null
     };
-
-    const CRAVING_QUESTIONS = [
-      "1. Eu gostaria de um cigarro agora.",
-      "2. Se eu fumasse agora, eu não seria capaz de parar.",
-      "3. Se eu tivesse um cigarro aceso na minha mão, eu provavelmente fumaria.",
-      "4. Neste momento um cigarro seria gostoso.",
-      "5. Eu estaria menos irritado agora se eu fumasse.",
-      "6. Seria difícil desprezar a chance de fumar.",
-      "7. Eu não poderia me impedir de fumar se eu tivesse vários cigarros.",
-      "8. Fumar um cigarro seria prazeroso.",
-      "9. Se eu estivesse fumando agora eu poderia pensar mais claramente.",
-      "10. Eu não seria capaz de controlar quanto eu fumo se eu tivesse muitos cigarros aqui.",
-      "11. Eu não poderia facilmente limitar o quanto eu fumaria agora.",
-      "12. Eu poderia controlar muitas coisas agora se eu pudesse fumar."
-    ];
 
     let stimuliList = [];
     let currentImageIndex = 0;
@@ -1459,7 +1439,6 @@
       await inicializarBancoImagens();
       updateStimuliStatusBadge();
       renderStoredParticipantsList();
-      renderCravingFormItems();
       loadSavedGoogleSheetUrl();
 
       // Atalho de teclado para o pesquisador: Ctrl + Shift + P
@@ -1485,10 +1464,8 @@
       const btnConfirm = document.getElementById('btnConfirmEva');
 
       [s1, s2].forEach((slider, idx) => {
-        updateSliderColor(slider);
         slider.addEventListener('input', () => {
           sliderInteractions[`slider${idx + 1}`] = true;
-          updateSliderColor(slider);
           checkEvaCanConfirm();
         });
       });
@@ -1668,37 +1645,6 @@
       }
     }
 
-    function renderCravingFormItems() {
-      const container = document.getElementById('cravingItemsContainer');
-      if (!container) return;
-
-      container.innerHTML = CRAVING_QUESTIONS.map((qText, index) => {
-        const itemNumber = index + 1;
-        return `
-          <div class="neu-raised-sm rounded-2xl p-5 space-y-3">
-            <label class="block text-sm sm:text-base font-bold text-slate-800 leading-snug">
-              ${qText}
-            </label>
-            <div class="pt-2">
-              <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">
-                <span class="text-rose-600">Discordo Fortemente</span>
-                <span class="text-slate-400 hidden sm:inline">Neutro</span>
-                <span class="text-emerald-600">Concordo Fortemente</span>
-              </div>
-              <div class="grid grid-cols-7 gap-2 text-center">
-                ${[1, 2, 3, 4, 5, 6, 7].map(val => `
-                  <label class="flex flex-col items-center justify-center p-2.5 rounded-xl neu-inset hover:bg-slate-200/60 cursor-pointer transition has-[:checked]:bg-blue-50 has-[:checked]:border-2 has-[:checked]:border-blue-600">
-                    <input type="radio" name="craving_item_${itemNumber}" value="${val}" required class="accent-blue-600 mb-1 cursor-pointer">
-                    <span class="text-xs font-mono font-bold text-slate-700">${val}</span>
-                  </label>
-                `).join('')}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
     function startParticipantFlow() {
       const code = document.getElementById('participantId').value.trim();
       const age = parseInt(document.getElementById('participantAge').value, 10);
@@ -1804,10 +1750,9 @@
       document.getElementById('viewGYTS').classList.add('hidden');
 
       if (isSmoker) {
-        document.getElementById('viewCraving').classList.remove('hidden');
+        document.getElementById('viewFagerstrom').classList.remove('hidden');
         document.getElementById('badgeCurrentPhase').textContent = 'Questionário';
       } else {
-        participant.craving = null;
         participant.fagerstrom = null;
         document.getElementById('viewPhase1').classList.remove('hidden');
         document.getElementById('badgeCurrentPhase').textContent = 'Etapa 1';
@@ -1815,32 +1760,6 @@
         evaResponses = [];
         loadCurrentImage(false);
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function submitCraving() {
-      const cravingScores = {};
-      let totalScore = 0;
-
-      for (let i = 1; i <= 12; i++) {
-        const checked = document.querySelector(`input[name="craving_item_${i}"]:checked`);
-        if (!checked) {
-          showToast(`Por favor, responda ao item ${i} do questionário de fissura.`, true);
-          return;
-        }
-        const val = parseInt(checked.value, 10);
-        cravingScores[`item_${i}`] = val;
-        totalScore += val;
-      }
-
-      cravingScores.escoreTotal = totalScore;
-      cravingScores.media = parseFloat((totalScore / 12).toFixed(2));
-      cravingScores.respondidoEm = new Date().toISOString();
-
-      participant.craving = cravingScores;
-
-      document.getElementById('viewCraving').classList.add('hidden');
-      document.getElementById('viewFagerstrom').classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1886,40 +1805,6 @@
       loadCurrentImage(false);
     }
 
-    function updateSliderColor(slider) {
-      if (!slider) return;
-      const val = parseFloat(slider.value);
-      let r, g, b, borderR, borderG, borderB, glowR, glowB;
-
-      if (val <= 50) {
-        const t = val / 50;
-        r = Math.round(225 + (148 - 225) * t);
-        g = Math.round(29 + (163 - 29) * t);
-        b = Math.round(72 + (184 - 72) * t);
-
-        borderR = Math.round(190 + (100 - 190) * t);
-        borderG = Math.round(18 + (116 - 18) * t);
-        borderB = Math.round(60 + (139 - 60) * t);
-
-        glowR = r; glowB = b;
-      } else {
-        const t = (val - 50) / 50;
-        r = Math.round(148 + (22 - 148) * t);
-        g = Math.round(163 + (163 - 163) * t);
-        b = Math.round(184 + (74 - 184) * t);
-
-        borderR = Math.round(100 + (15 - 100) * t);
-        borderG = Math.round(116 + (118 - 116) * t);
-        borderB = Math.round(139 + (54 - 139) * t);
-
-        glowR = r; glowB = b;
-      }
-
-      slider.style.setProperty('--thumb-bg', `rgb(${r}, ${g}, ${b})`);
-      slider.style.setProperty('--thumb-border', `rgb(${borderR}, ${borderG}, ${borderB})`);
-      slider.style.setProperty('--thumb-glow', `rgba(${glowR}, ${g}, ${glowB}, 0.5)`);
-    }
-
     function resetEvaSliders() {
       const s1 = document.getElementById('evaSlider1');
       const s2 = document.getElementById('evaSlider2');
@@ -1927,7 +1812,6 @@
       [s1, s2].forEach(slider => {
         if (slider) {
           slider.value = 50;
-          updateSliderColor(slider);
         }
       });
 
@@ -2220,7 +2104,7 @@
       }).join('');
     }
 
-    /* --- GERAÇÃO MODULAR DE PLANILHAS (6 ABAS ANALÍTICAS TEMÁTICAS) --- */
+    /* --- GERAÇÃO MODULAR DE PLANILHAS (5 ABAS ANALÍTICAS TEMÁTICAS) --- */
     function buildThematicWorkbook(records) {
       const wb = XLSX.utils.book_new();
 
@@ -2271,27 +2155,7 @@
       });
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsGyts.length ? rowsGyts : [{ Info: 'Sem registros' }]), 'GYTS_Tabagismo');
 
-      // 3. Aba Fissura (QSU-Brief)
-      const rowsCraving = records.map(rec => {
-        const p = rec.participant;
-        const c = p.craving || null;
-        const row = {
-          'ID_Participante': p.id,
-          'Idade': p.age,
-          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
-          'Status_Questionario': c ? 'Respondido' : 'Não Aplicável (Não Fumante)',
-          'Escore_Total_Fissura': c ? c.escoreTotal : 'N/A',
-          'Media_Itens_Fissura': c ? c.media : 'N/A'
-        };
-        for (let i = 1; i <= 12; i++) {
-          row[`Item_${i}`] = c ? c[`item_${i}`] : 'N/A';
-        }
-        row['Data_Resposta'] = c ? c.respondidoEm : 'N/A';
-        return row;
-      });
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rowsCraving.length ? rowsCraving : [{ Info: 'Sem registros' }]), 'Fissura_QSU_Brief');
-
-      // 4. Aba Dependência de Fagerström
+      // 3. Aba Dependência de Fagerström
       const rowsFager = records.map(rec => {
         const p = rec.participant;
         const f = p.fagerstrom || null;
@@ -2386,7 +2250,7 @@
         const wb = buildThematicWorkbook([currentRecord]);
         const fileName = `Pesquisa_EVA_TEDA_${participant.id}_${(participant.smokingGroup || 'Nao_Definido').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
         XLSX.writeFile(wb, fileName);
-        showToast('Planilha Excel organizada em 6 abas exportada com sucesso!');
+        showToast('Planilha Excel organizada em 5 abas exportada com sucesso!');
       } catch (err) {
         console.error(err);
         showToast('Erro ao gerar planilha Excel.', true);
@@ -2450,7 +2314,7 @@
       try {
         const wb = buildThematicWorkbook(db);
         XLSX.writeFile(wb, `Banco_Acumulado_Completo_USP_EVA_TEDA_${new Date().toISOString().slice(0, 10)}.xlsx`);
-        showToast('Banco acumulado exportado com sucesso com as 6 abas analíticas!');
+        showToast('Banco acumulado exportado com sucesso com as 5 abas analíticas!');
       } catch (e) {
         console.error(e);
         showToast('Erro ao exportar banco acumulado.', true);
@@ -2500,7 +2364,7 @@
         return;
       }
 
-      showToast('Disparando teste de gravação nas 6 abas temáticas...');
+      showToast('Disparando teste de gravação nas 5 abas temáticas...');
       try {
         await fetch(url, {
           method: 'POST',
@@ -2522,7 +2386,6 @@
               GYTS_Q1_Experimentou_Fumar: 'Não',
               Data_Registro: new Date().toLocaleString('pt-BR')
             },
-            cravingRow: null,
             fagerstromRow: null,
             evaRows: [],
             tedaRows: []
@@ -2552,7 +2415,6 @@
         const p = currentRecord.participant;
         const s = p.sociodemographic || {};
         const g = p.gyts || {};
-        const c = p.craving || null;
         const f = p.fagerstrom || null;
         const ips = currentRecord.tedaIndifferencePoints || [];
 
@@ -2593,29 +2455,7 @@
           'Data_Registro': p.completedAt || p.startedAt
         };
 
-        // 3. Linha Fissura
-        const cravingRow = c ? {
-          'ID_Participante': p.id,
-          'Idade': p.age,
-          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
-          'Status_Questionario': 'Respondido',
-          'Escore_Total_Fissura': c.escoreTotal,
-          'Media_Itens_Fissura': c.media,
-          'Item_1': c.item_1, 'Item_2': c.item_2, 'Item_3': c.item_3, 'Item_4': c.item_4,
-          'Item_5': c.item_5, 'Item_6': c.item_6, 'Item_7': c.item_7, 'Item_8': c.item_8,
-          'Item_9': c.item_9, 'Item_10': c.item_10, 'Item_11': c.item_11, 'Item_12': c.item_12,
-          'Data_Resposta': c.respondidoEm
-        } : {
-          'ID_Participante': p.id,
-          'Idade': p.age,
-          'Grupo_Tabagismo': p.smokingGroup || 'Não fumante',
-          'Status_Questionario': 'Não Aplicável (Não Fumante)',
-          'Escore_Total_Fissura': 'N/A',
-          'Media_Itens_Fissura': 'N/A',
-          'Data_Resposta': 'N/A'
-        };
-
-        // 4. Linha Fagerström
+        // 3. Linha Fagerström
         const fagerstromRow = f ? {
           'ID_Participante': p.id,
           'Idade': p.age,
@@ -2686,7 +2526,6 @@
         const payload = {
           sociodemographicRow,
           gytsRow,
-          cravingRow,
           fagerstromRow,
           evaRows,
           tedaRows
